@@ -1,0 +1,148 @@
+<div class="checkout-container">
+    <div class="summary">
+        <div class="summary-item">
+            <span>Subtotal: </span>
+            <span>{{totalAmount | currency: 'INR'}}</span>
+        </div>
+        <div class="summary-item">
+            <span>Tax: </span>
+            <span>{{gstAmount | currency: 'INR'}}</span>
+        </div>
+        <div class="summary-item summary-total">
+            <span>Total: </span>
+            <span>{{finalAmount | currency: 'INR'}}</span>
+        </div>
+    </div>
+
+    <mat-horizontal-stepper linear #stepper>
+        <!-- Step 1: Cart Items -->
+        <mat-step label="Cart Items">
+            <table mat-table [dataSource]="cartItems" class="mat-elevation-z8">
+                <!-- Image Column -->
+                <ng-container matColumnDef="image">
+                    <th mat-header-cell *matHeaderCellDef> Image </th>
+                    <td mat-cell *matCellDef="let element">
+                        <img [src]="element.imageURL" alt="{{element.productName}}" class="product-image" />
+                    </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="productName">
+                    <th mat-header-cell *matHeaderCellDef> Product </th>
+                    <td mat-cell *matCellDef="let element">{{element.productName}}</td>
+                </ng-container>
+
+                <!-- Quantity Column -->
+                <ng-container matColumnDef="quantity">
+                    <th mat-header-cell *matHeaderCellDef> Quantity </th>
+                    <td mat-cell *matCellDef="let element">{{element.quantity}}</td>
+                </ng-container>
+
+                <!-- Price Column -->
+                <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef> Price </th>
+                    <td mat-cell *matCellDef="let element">{{element.price | currency: 'INR'}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <div class="buttons">
+                <button mat-raised-button color="primary" (click)="stepper.next()">Next</button>
+            </div>
+        </mat-step>
+
+        <!-- Step 2: Address -->
+        <mat-step label="Address">
+            <form [formGroup]="addressForm">
+                <div *ngIf="addressExists && !editAddressMode">
+                    <p><strong>Shipping Address:</strong> {{ addressForm.value.address }}</p>
+                    <button mat-button color="primary" (click)="editAddress()">Edit Address</button>
+                </div>
+                <div class="address-save" *ngIf="editAddressMode || !addressExists">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Address</mat-label>
+                        <textarea matInput formControlName="address" placeholder="Enter your full address"></textarea>
+                    </mat-form-field>
+                    <div *ngIf="editAddressMode">
+                        <button mat-button color="warn" (click)="cancelEdit()"><mat-icon>cancel</mat-icon>Cancel</button>
+                        <button mat-button color="primary" (click)="saveAddress()"><mat-icon>save</mat-icon>Save</button>
+                    </div>
+                    <div *ngIf="!editAddressMode && !addressExists">
+                        <button  mat-button color="primary" (click)="saveAddress()"><mat-icon>save</mat-icon>Save</button>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button mat-raised-button (click)="stepper.previous()">Back</button>
+                    <button mat-raised-button color="primary" (click)="stepper.next()">Next</button>
+                </div>
+            </form>
+        </mat-step>
+
+        <!-- Step 3: Payment Options -->
+        <mat-step label="Payment Options">
+            <div class="payment-steps">
+                <div class="payment-methods">
+                    <mat-radio-group [(ngModel)]="selectedPaymentMethod">
+                        <mat-radio-button value="card">Debit/Credit Card</mat-radio-button>
+                        <br />
+                        <mat-radio-button value="upi">UPI</mat-radio-button>
+                        <br />
+                        <mat-radio-button value="cod">Cash on Delivery</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+
+                <div class="payment-details">
+                    <div *ngIf="selectedPaymentMethod === 'card'">
+                        <form [formGroup]="paymentForm">
+                            <h4>You card details will not be saved with us. It is completely secure!</h4>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Name on Card</mat-label>
+                                <input matInput placeholder="Enter name on the card" formControlName="cardName" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="fill">
+                                <mat-label>Card Number</mat-label>
+                                <input matInput placeholder="xxxx xxxx xxxx xxxx" formControlName="cardNumber" />
+                            </mat-form-field>
+
+                            <div class="card-details">
+                                <mat-form-field appearance="fill" class="half-width">
+                                    <mat-label>Expiry Date</mat-label>
+                                    <input matInput placeholder="MM/YYYY" formControlName="expiryDate" />
+                                </mat-form-field>
+
+                                <mat-form-field appearance="fill" class="half-width">
+                                    <mat-label>CVV</mat-label>
+                                    <input matInput placeholder="123" formControlName="cvv" type="password" />
+                                </mat-form-field>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div *ngIf="selectedPaymentMethod === 'upi'">
+                        <h4>You upi details will not be saved with us. It is completely secure!</h4>
+                        <form [formGroup]="paymentForm">
+                            <mat-form-field appearance="fill">
+                                <mat-label>UPI ID</mat-label>
+                                <input matInput formControlName="upiId" />
+                            </mat-form-field>
+                        </form>
+                    </div>
+
+                    <div *ngIf="selectedPaymentMethod === 'cod'">
+                        <h4>No additional information required for Cash on Delivery. Please pay cash to the delivery
+                            agent.</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button mat-raised-button (click)="stepper.previous()">Back</button>
+                <button mat-raised-button color="primary" (click)="placeOrder()">Place Order</button>
+            </div>
+        </mat-step>
+    </mat-horizontal-stepper>
+</div>

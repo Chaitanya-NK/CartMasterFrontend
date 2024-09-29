@@ -1,0 +1,66 @@
+<div class="track-order-container">
+    <div *ngFor="let order of orders" class="order-details">
+        <h2>Order #{{ order.orderID }}</h2>
+        <p>Status: {{ order.status }}</p>
+        <p>Total Amount: {{ order.totalAmount | currency: 'INR' }}</p>
+        <p>Order Date: {{ order.orderDate | date }}</p>
+        <p *ngIf="order.status === 'Out For Delivery'" class="arriving-today">
+            Arriving Today
+        </p>
+        <mat-table [dataSource]="dataSource" class="order-items-table">
+            <ng-container matColumnDef="productName">
+                <mat-header-cell *matHeaderCellDef> Product Name </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.productName}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="productDescription">
+                <mat-header-cell *matHeaderCellDef> Product Description </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.productDescription}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="imageURL">
+                <mat-header-cell *matHeaderCellDef> Image </mat-header-cell>
+                <mat-cell *matCellDef="let element"> <img [src]="element.imageURL" alt="{{ element.productName }}"
+                        class="image" /></mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="quantity">
+                <mat-header-cell *matHeaderCellDef>Quantity</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element.quantity }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="price">
+                <mat-header-cell *matHeaderCellDef>Price</mat-header-cell>
+                <mat-cell *matCellDef="let element">{{ element.price | currency: 'INR' }}</mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+        <div class="track-buttons">
+            <button mat-raised-button color="warn" *ngIf="canCancelOrder(order.status)"
+                (click)="cancelOrder(order.orderID)">Cancel Order</button>
+            <div class="downlaod-invoice-container">
+                <button mat-raised-button color="primary"
+                    (click)="downloadInvoice(order.orderID)" [disabled]="isDownloading"><mat-icon>download</mat-icon> Donwload Invoice</button>
+                <mat-spinner *ngIf="isDownloading" diameter="24" class="spinner"></mat-spinner>
+            </div>
+        </div>
+    </div>
+    <div class="delivery-status">
+        <h3>Track Your Package</h3>
+        <mat-divider></mat-divider>
+        <h3>Delivery Status</h3>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-line-container">
+                    <div class="progress-line"></div>
+                </div>
+                <div *ngFor="let status of deliveryStatus; let i = index" class="progress-step">
+                    <div class="status-dot"
+                        [ngClass]="{'completed': i < currentStatusIndex, 'current': i === currentStatusIndex}"></div>
+                </div>
+            </div>
+            <div class="status-labels">
+                <div *ngFor="let status of deliveryStatus" class="status-label">
+                    {{ status }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

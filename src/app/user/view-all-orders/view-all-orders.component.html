@@ -1,0 +1,89 @@
+<div class="orders-container">
+    <h2>Your Orders</h2>
+
+    <div *ngIf="loading; else ordersContent">
+        <app-card-table-placeholder></app-card-table-placeholder>
+        <app-spinner></app-spinner>
+    </div>
+    <ng-template #ordersContent>
+        <mat-card *ngFor="let order of orders" class="order-card">
+            <mat-card-content class="order-content">
+                <div class="order-details">
+                    <h3>Order #{{ order.orderID }} - {{ order.status }}</h3>
+                    <p>Date: {{ order.orderDate | date }}</p>
+                    <p>Total Amount: {{ order.totalAmount | currency: 'INR' }}</p>
+                    <h4>Items Purchased:</h4>
+                    <mat-table [dataSource]="order.orderItems" class="mat-elevation-z8 order-items-table">
+    
+                        <!-- Product Name Column -->
+                        <ng-container matColumnDef="productName">
+                            <mat-header-cell *matHeaderCellDef> Product Name </mat-header-cell>
+                            <mat-cell *matCellDef="let item"> {{item.productName}} </mat-cell>
+                        </ng-container>
+
+                        <!-- Product Description Column -->
+                        <ng-container matColumnDef="productDescription">
+                            <mat-header-cell *matHeaderCellDef> Product Description </mat-header-cell>
+                            <mat-cell *matCellDef="let item"> {{item.productDescription}} </mat-cell>
+                        </ng-container>
+
+                        <!-- Product Image Column -->
+                        <ng-container matColumnDef="imageURL">
+                            <mat-header-cell *matHeaderCellDef> Image </mat-header-cell>
+                            <mat-cell *matCellDef="let item"> <img [src]="item.imageURL" alt="{{ item.productName }}" class="image" /> </mat-cell>
+                        </ng-container>
+    
+                        <!-- Quantity Column -->
+                        <ng-container matColumnDef="quantity">
+                            <mat-header-cell *matHeaderCellDef> Quantity </mat-header-cell>
+                            <mat-cell *matCellDef="let item"> {{item.quantity}} </mat-cell>
+                        </ng-container>
+    
+                        <!-- Price Column -->
+                        <ng-container matColumnDef="price">
+                            <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
+                            <mat-cell *matCellDef="let item"> {{item.price | currency: 'INR'}} </mat-cell>
+                        </ng-container>
+
+                        <!-- Return Column -->
+                        <ng-container matColumnDef="return">
+                            <mat-header-cell *matHeaderCellDef> Return </mat-header-cell>
+                            <mat-cell *matCellDef="let item"> 
+                                <ng-container *ngIf="!item.returnRequested; else returnRequested">
+                                    <button *ngIf="order.status === 'Delivered'" mat-stroked-button color="warn" (click)="requestReturn(item)">
+                                        Return
+                                    </button>
+                                    <span *ngIf="order.status !== 'Delivered'">Not eligible</span>
+                                </ng-container>
+                                <ng-template #returnRequested>
+                                    <ng-container [ngSwitch]="item.returnStatus">
+                                        <ng-container *ngSwitchCase="'Return Requested'">
+                                            <span class="return-status">Return Requested</span>
+                                        </ng-container>
+                                        <ng-container *ngSwitchCase="'Return Accepted'">
+                                            <span class="return-status">Return Accepted</span>
+                                        </ng-container>
+                                        <ng-container *ngSwitchCase="'Returned'">
+                                            <span class="return-status">Returned</span>
+                                        </ng-container>
+                                        <ng-container *ngSwitchDefault>
+                                            <span class="return-status">No Return</span>
+                                        </ng-container>
+                                    </ng-container>
+                                </ng-template>
+                            </mat-cell>
+                        </ng-container>
+    
+                        <!-- Header and Row Declarations -->
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+                </div>
+                <div class="order-actions" *ngIf="canDisplayActionButtons(order.orderItems)">
+                    <button mat-raised-button color="primary" (click)="nagivateToTrackOrder(order.orderID)">Track Order</button>
+                    <button mat-raised-button color="warn" *ngIf="canCancelOrder(order.status)" (click)="cancelOrder(order.orderID)">Cancel Order</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </ng-template>
+</div>

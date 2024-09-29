@@ -1,0 +1,15 @@
+<mat-card class="placeholder-card">
+    <mat-card-header>
+        <mat-card-title>
+            <div class="placeholder-title"></div>
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="mat-table-placeholder">
+            <div class="mat-table-placeholder-row" *ngFor="let _ of [].constructor(rowCount);">
+                <div class="mat-table-placeholder-cell" *ngFor="let _ of [].constructor(columnCount)"></div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+<app-buffer-progress-bar></app-buffer-progress-bar>

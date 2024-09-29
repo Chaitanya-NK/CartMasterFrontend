@@ -1,0 +1,34 @@
+.mat-table-placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.mat-table-placeholder-row {
+    display: flex;
+    gap: 10px;
+}
+
+.mat-table-placeholder-cell {
+    flex: 1;
+    height: 40px;
+    /* Adjust based on your needs */
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        background-color: #e0e0e0;
+    }
+
+    50% {
+        background-color: #c0c0c0;
+    }
+
+    100% {
+        background-color: #e0e0e0;
+    }
+}

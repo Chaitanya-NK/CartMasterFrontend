@@ -1,0 +1,13 @@
+.dialog-content {
+    text-align: center;
+}
+
+.expanded-image {
+    max-width: 100%;
+    max-height: 90vh;
+}
+
+button {
+    display: flex;
+    justify-content: space-between;
+}

@@ -1,0 +1,138 @@
+.track-order-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.order-details {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.arriving-today {
+    color: green;
+    font-weight: bold;
+    font-size: 30px;
+    margin-top: 10px;
+}
+
+.delivery-status {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.progress-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.progress-bar {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: 20px;
+}
+
+.progress-line-container {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 4px; /* Adjust thickness */
+    background-color: gray;
+}
+
+.progress-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: green; /* Adjust color as needed */
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin: 0 10px; /* Space between steps */
+    width: 100%;
+}
+
+.status-dot {
+    width: 20px; /* Adjust size */
+    height: 20px; /* Adjust size */
+    border-radius: 50%;
+    background-color: white;
+    position: relative;
+    z-index: 1;
+}
+
+.status-dot.current {
+    background-color: green;
+}
+
+.status-dot.completed {
+    background-color: gray;
+}
+
+.status-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+    padding: 0 10px;
+}
+
+.status-label {
+    text-align: center;
+    width: 100%; /* Adjust to align labels under dots */
+    position: relative;
+}
+
+.status-label::after {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    height: 10px;
+    background-color: green;
+    transform: translateX(-50%);
+    /* z-index: -1; */
+}
+
+.status-label.current::after {
+    background-color: green;
+}
+
+.status-label.completed::after {
+    background-color: gray;
+}
+
+button {
+    margin-top: 20px;
+}
+
+.track-buttons{
+    display: flex;
+    justify-content: space-between;
+}
+
+.image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.download-invoice-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.spinner {
+    margin-left: 10px;
+}

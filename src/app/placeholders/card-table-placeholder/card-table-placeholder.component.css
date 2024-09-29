@@ -1,0 +1,64 @@
+.placeholder-card {
+    width: 100%;
+    height: auto; /* Allow the height to adjust based on content */
+    margin: 16px auto; /* Center the card and add vertical spacing */
+    padding: 16px; /* Add padding inside the card */
+    border-radius: 8px; /* Rounded corners for the card */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for the card */
+    background-color: #fff; /* White background for the card */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.placeholder-title,
+.placeholder-content {
+    background-color: #e0e0e0;
+    border-radius: 4px; /* Rounded corners for the placeholder elements */
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+.placeholder-title {
+    height: 24px; /* Slightly taller for better visibility */
+    width: 60%;
+    margin-bottom: 12px; /* Increased margin below title */
+}
+
+.placeholder-content {
+    height: 16px; /* Adjusted for visual consistency */
+    width: 80%; /* Adjusted width */
+    margin-bottom: 8px; /* Reduced margin for better alignment */
+}
+
+.mat-table-placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Increased gap between rows */
+}
+
+.mat-table-placeholder-row {
+    display: flex;
+    gap: 12px; /* Increased gap between cells */
+}
+
+.mat-table-placeholder-cell {
+    flex: 1;
+    height: 48px; /* Increased height for better visibility */
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        background-color: #e0e0e0;
+    }
+
+    50% {
+        background-color: #c0c0c0;
+    }
+
+    100% {
+        background-color: #e0e0e0;
+    }
+}

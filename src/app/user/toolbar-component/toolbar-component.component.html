@@ -1,0 +1,115 @@
+<!-- <mat-toolbar>
+    <mat-icon>shopping_cart</mat-icon>
+    <span>
+        Cart Master
+    </span>
+    <span class="spacer"></span>
+
+    <ng-container *ngIf="!isLoggedIn">
+        <button mat-raised-button color="primary" (click)="navigateToLogin()">
+            <mat-icon>login</mat-icon>
+            Login
+        </button>
+        <button mat-raised-button color="primary" (click)="navigateToRegister()">
+            <mat-icon>exit_to_app</mat-icon>
+            Register
+        </button>
+    </ng-container>
+
+    <ng-container *ngIf="isLoggedIn">
+        <button [routerLink]="menu.route" routerLinkActive="active-menu" *ngFor="let menu of menus" mat-button (click)="onMenuClick(menu.route)">
+            {{menu.name}}
+        </button>
+        <button *ngIf="!roleName()" mat-icon-button (click)="navigateToCart()">
+            <mat-icon>shopping_cart</mat-icon>
+            <span *ngIf="cartItemCount >= 0" class="badge" matBadge="{{cartItemCount}}" matBadgeSize="small"
+                matBadgeColor="warn" matBadgePosition="above">
+            </span>
+        </button>
+
+        <button mat-icon-button [matMenuTriggerFor]="userMenu" class="avatar"><mat-icon>person</mat-icon></button>
+        <mat-menu #userMenu="matMenu">
+            <button mat-menu-item disabled style="border-bottom: 1px solid #ddd;">Hi, {{userName()}} </button>
+            <button mat-menu-item (click)="navigateToProfile()">Profile</button>
+            <button *ngIf="!roleName()" mat-menu-item (click)="navigateToWishlist()">Wishlist</button>
+            <button *ngIf="!roleName()" mat-menu-item (click)="navigateToOrders()">Orders</button>
+            <button mat-menu-item (click)="onLogout()">Logout</button>
+        </mat-menu>
+    </ng-container>
+</mat-toolbar> -->
+
+
+
+
+
+
+<mat-toolbar>
+    <!-- Cart Master Icon and Title -->
+    <mat-icon>shopping_cart</mat-icon>
+    <span>Cart Master</span>
+
+    <span class="spacer"></span>
+
+    <!-- Hamburger Icon for smaller screens (tablets and mobiles) -->
+    <button mat-icon-button class="hamburger" [matMenuTriggerFor]="mobileMenu">
+        <mat-icon>menu</mat-icon>
+    </button>
+
+    <!-- Full Menu for larger screens (laptops and desktops) -->
+    <ng-container *ngIf="!isSmallScreen">
+        <ng-container *ngIf="!isLoggedIn">
+            <button mat-raised-button color="primary" (click)="navigateToLogin()">
+                <mat-icon>login</mat-icon> Login
+            </button>
+            <button mat-raised-button color="primary" (click)="navigateToRegister()">
+                <mat-icon>exit_to_app</mat-icon> Register
+            </button>
+        </ng-container>
+
+        <ng-container *ngIf="isLoggedIn">
+            <button [routerLink]="menu.route" routerLinkActive="active-menu" *ngFor="let menu of menus" mat-button (click)="onMenuClick(menu.route)">
+                {{menu.name}}
+            </button>
+            <button *ngIf="!roleName()" mat-icon-button (click)="navigateToCart()">
+                <mat-icon>shopping_cart</mat-icon>
+                <span *ngIf="cartItemCount >= 0" class="badge" matBadge="{{cartItemCount}}" matBadgeSize="small" matBadgeColor="warn" matBadgePosition="above"></span>
+            </button>
+
+            <button mat-icon-button [matMenuTriggerFor]="userMenu">
+                <mat-icon>person</mat-icon>
+            </button>
+            <mat-menu #userMenu="matMenu">
+                <button mat-menu-item disabled style="border-bottom: 1px solid #ddd;">Hi, {{userName()}}</button>
+                <button mat-menu-item (click)="navigateToProfile()">Profile</button>
+                <button *ngIf="!roleName()" mat-menu-item (click)="navigateToWishlist()">Wishlist</button>
+                <button *ngIf="!roleName()" mat-menu-item (click)="navigateToOrders()">Orders</button>
+                <button mat-menu-item (click)="onLogout()">Logout</button>
+            </mat-menu>
+        </ng-container>
+    </ng-container>
+
+    <!-- Mobile Menu: Shown on small screens (tablets and mobiles) -->
+    <mat-menu #mobileMenu="matMenu">
+        <ng-container *ngIf="!isLoggedIn">
+            <button mat-menu-item (click)="navigateToLogin()">
+                <mat-icon>login</mat-icon> Login
+            </button>
+            <button mat-menu-item (click)="navigateToRegister()">
+                <mat-icon>exit_to_app</mat-icon> Register
+            </button>
+        </ng-container>
+
+        <ng-container *ngIf="isLoggedIn">
+            <button mat-menu-item [routerLink]="menu.route" *ngFor="let menu of menus">
+                {{menu.name}}
+            </button>
+            <button *ngIf="!roleName()" mat-menu-item (click)="navigateToCart()">
+                <mat-icon>shopping_cart</mat-icon> Cart ({{cartItemCount}})
+            </button>
+            <button mat-menu-item (click)="navigateToProfile()">Profile</button>
+            <button *ngIf="!roleName()" mat-menu-item (click)="navigateToWishlist()">Wishlist</button>
+            <button *ngIf="!roleName()" mat-menu-item (click)="navigateToOrders()">Orders</button>
+            <button mat-menu-item (click)="onLogout()">Logout</button>
+        </ng-container>
+    </mat-menu>
+</mat-toolbar>

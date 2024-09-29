@@ -1,0 +1,48 @@
+<h2>Users</h2>
+<div *ngIf="loading" class="table-placeholder">
+    <app-table-placeholder [columnCount]="columnCount" [rowCount]="rowCount"></app-table-placeholder>
+</div>
+<div *ngIf="!loading" class="user-container">
+    <div class="mat-elevation-z8 responsive-table-wrapper">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 user-table responsive-table">
+            <ng-container matColumnDef="username">
+                <th mat-header-cell *matHeaderCellDef>User Name</th>
+                <td mat-cell *matCellDef="let user">{{ user.username }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef>Email</th>
+                <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="firstName">
+                <th mat-header-cell *matHeaderCellDef>First Name</th>
+                <td mat-cell *matCellDef="let user">{{ user.firstName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="lastName">
+                <th mat-header-cell *matHeaderCellDef>Last Name</th>
+                <td mat-cell *matCellDef="let user">{{ user.lastName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="phoneNumber">
+                <th mat-header-cell *matHeaderCellDef>Phone Number</th>
+                <td mat-cell *matCellDef="let user">{{ user.phoneNumber }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="viewOrders">
+                <th mat-header-cell *matHeaderCellDef>Action</th>
+                <td mat-cell *matCellDef="let user">
+                    <button mat-button color="primary" (click)="viewOrders(user.userID)">View Orders</button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+            aria-label="select page of categories"></mat-paginator>
+    </div>
+
+    
+</div>

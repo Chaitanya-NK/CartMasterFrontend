@@ -1,0 +1,32 @@
+<mat-card class="otp-card">
+    <mat-card-header>
+        <mat-card-title class="otp-title">Please enter the OTP sent to your mail</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="otp-container">
+            <div class="otp-inputs">
+                <mat-form-field class="otp-field" appearance="outline">
+                    <input type="password" matInput maxlength="1" [(ngModel)]="otp[0]" (keyup)="onKeyUp($event, 0)" />
+                </mat-form-field>
+                <mat-form-field class="otp-field" appearance="outline">
+                    <input type="password" matInput maxlength="1" [(ngModel)]="otp[1]" (keyup)="onKeyUp($event, 1)" />
+                </mat-form-field>
+                <mat-form-field class="otp-field" appearance="outline">
+                    <input type="password" matInput maxlength="1" [(ngModel)]="otp[2]" (keyup)="onKeyUp($event, 2)" />
+                </mat-form-field>
+                <mat-form-field class="otp-field" appearance="outline">
+                    <input type="password" matInput maxlength="1" [(ngModel)]="otp[3]" (keyup)="onKeyUp($event, 3)" />
+                </mat-form-field>
+                <mat-form-field class="otp-field" appearance="outline">
+                    <input type="password" matInput maxlength="1" [(ngModel)]="otp[4]" (keyup)="onKeyUp($event, 4)" />
+                </mat-form-field>
+                <mat-form-field class="otp-field" appearance="outline">
+                    <input type="password" matInput maxlength="1" [(ngModel)]="otp[5]" (keyup)="onKeyUp($event, 5)" />
+                </mat-form-field>
+            </div>
+
+            <button mat-raised-button color="primary" (click)="verifyOTP()" [disabled]="isButtonDisabled">Verify
+                OTP</button>
+        </div>
+    </mat-card-content>
+</mat-card>

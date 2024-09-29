@@ -1,0 +1,137 @@
+<div *ngIf="loading">
+    <app-spinner></app-spinner>
+</div>
+<div *ngIf="!loading" class="head">
+    <h1 class="heading">CartMaster Dashboard</h1>
+    <button class="export-button" mat-stroked-button (click)="exportToExcel()">
+        <mat-icon class="icon">download</mat-icon>
+        Export to Excel
+    </button>
+</div>
+<div *ngIf="!loading" class="dashboard-container">
+    <div class="left-section">
+        <div class="dashboard-cards">
+            <div class="dashboard-card" *ngFor="let card of dashboardCards"
+                [ngStyle]="{'border-color': card.borderColor, 'color': card.textColor}">
+                <div class="card-content">
+                    <div class="card-title" [ngStyle]="{'color': card.textColor}">{{ card.title }}</div>
+                    <div class="card-value" [ngStyle]="{'color': card.countTextColor}"
+                        *ngIf="card.key === 'revenue'; else others">
+                        ₹ {{ counts[card.key] }}
+                    </div>
+                    <ng-template #others>
+                        <div class="card-value" [ngStyle]="{'color': card.countTextColor}">
+                            {{ counts[card.key] }}
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+
+        <h3>Sales Data (Monthly)</h3>
+        <canvas class="sales-chart" baseChart
+            [datasets]="[{ data: salesChartData, label: 'Sales',   backgroundColor: '#FF5733' }]"
+            [labels]="salesChartLabels" chartType="bar" [options]="{ responsive: true, maintainAspectRatio: true }">
+        </canvas>
+
+        <h3>Top Reviewd Products</h3>
+        <mat-table [dataSource]="topReviewedProducts" class="mat-elevation-z8 table-container">
+            <ng-container matColumnDef="productName">
+                <mat-header-cell *matHeaderCellDef> Product Name </mat-header-cell>
+                <mat-cell *matCellDef="let product"> {{ product.productName }} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="reviewCount">
+                <mat-header-cell *matHeaderCellDef> Review Count </mat-header-cell>
+                <mat-cell *matCellDef="let product"> {{ product.reviewCount }} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="averageRating">
+                <mat-header-cell *matHeaderCellDef> Average Rating </mat-header-cell>
+                <mat-cell *matCellDef="let product"> {{ product.averageRating }} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="['productName', 'reviewCount', 'averageRating']"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: ['productName', 'reviewCount', 'averageRating'];"></mat-row>
+        </mat-table>
+
+        <h3>Best Categories (Sales)</h3>
+        <canvas class="best-category-sales-chart" baseChart
+            [datasets]="[{ data: bestCategoriesChartData, label: 'Sales',   backgroundColor: '#33FF57' }]"
+            [labels]="bestCategoriesChartLabels" chartType="bar" [options]="{ responsive: true, maintainAspectRatio: true }">
+        </canvas>
+    </div>
+
+    <div class="right-section">
+        <h3 class="wishlist-heading">Wishlist Insights</h3>
+        <mat-table [dataSource]="wishlistInsights" class="mat-elevation-z8 table-container">
+            <ng-container matColumnDef="productName">
+                <mat-header-cell *matHeaderCellDef> Product Name </mat-header-cell>
+                <mat-cell *matCellDef="let insight"> {{ insight.productName }} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="wishlistCount">
+                <mat-header-cell *matHeaderCellDef> Wishlist Count </mat-header-cell>
+                <mat-cell *matCellDef="let insight"> {{ insight.wishlistCount }} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="['productName', 'wishlistCount']"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: ['productName', 'wishlistCount'];"></mat-row>
+        </mat-table>
+
+
+        <h3>User Growth (Monthly)</h3>
+        <canvas class="user-growth-chart" baseChart
+            [datasets]="[{ data: userGrowthChartData, label: 'User Registrations',  backgroundColor: '#3357FF' }]"
+            [labels]="userGrowthChartLabels" chartType="line" [options]="{ responsive: true, maintainAspectRatio: true }">
+        </canvas>
+
+        <h3>Low Stock Products</h3>
+        <mat-table *ngIf="lowStockProducts.length > 0; else stockUpdated" [dataSource]="lowStockProducts"
+            class="mat-elevation-z8 table-container">
+            <ng-container matColumnDef="productName">
+                <mat-header-cell *matHeaderCellDef> Product Name </mat-header-cell>
+                <mat-cell *matCellDef="let product"> {{ product.productName }} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="stockQuantity">
+                <mat-header-cell *matHeaderCellDef> Stock Quantity </mat-header-cell>
+                <mat-cell *matCellDef="let product"> {{ product.stockQuantity }} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="['productName', 'stockQuantity']"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: ['productName', 'stockQuantity'];"></mat-row>
+        </mat-table>
+        <ng-template #stockUpdated>
+            <span class="stock-updated">All Products are in Stock</span>
+        </ng-template>
+
+        <h3>Top Selling Products</h3>
+        <canvas class="top-selling-chart" baseChart
+            [datasets]="[{ data: topSellingChartData, label: 'Total Sold',  backgroundColor: '#FF33A6' }]"
+            [labels]="topSellingChartLabels" chartType="pie" [options]="{ responsive: true, maintainAspectRatio: true }">
+        </canvas>
+
+        <h3>Inactive Users</h3>
+        <mat-table *ngIf="inactiveUsers.length > 0; else noInactiveUsers" [dataSource]="dataSource"
+            class="mat-elevation-z8 table-container">
+            <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                <mat-cell *matCellDef="let user"> {{ user.name }} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+                <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+                <mat-cell *matCellDef="let user"> {{ user.email }} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="['name', 'email']"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: ['name', 'email'];"></mat-row>
+        </mat-table>
+        <mat-paginator [pageSizeOptions]="[3, 10, 20]" showFirstLastButtons
+            aria-label="select page of categories"></mat-paginator>
+        <ng-template #noInactiveUsers>
+            <span class="stock-updated">No Inactive Users</span>
+        </ng-template>
+    </div>
+</div>

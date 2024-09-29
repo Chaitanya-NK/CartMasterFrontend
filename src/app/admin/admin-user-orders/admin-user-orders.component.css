@@ -1,0 +1,70 @@
+/* Accordion Container Styling */
+.accordion-container {
+    margin: 20px;
+}
+
+/* Order Details Styling */
+.order-details {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* Mat Table for Order Items */
+.order-items-table {
+    width: 100%;
+    margin-top: 15px;
+}
+
+mat-header-cell,
+mat-cell {
+    padding: 8px;
+    text-align: left;
+}
+
+mat-header-cell {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+mat-row:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Status Dropdown Styling */
+mat-form-field {
+    margin-top: 15px;
+    width: 200px;
+}
+
+mat-select {
+    width: 100%;
+}
+
+/* Additional Responsive Styling */
+@media (max-width: 768px) {
+
+    mat-header-cell,
+    mat-cell {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    mat-form-field {
+        width: 100%;
+    }
+}
+
+.image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.no-orders {
+    display: flex;
+    justify-content: center;
+    font-style: italic;
+    margin-top: 50px;
+}

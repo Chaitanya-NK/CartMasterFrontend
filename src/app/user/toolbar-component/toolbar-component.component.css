@@ -1,0 +1,51 @@
+mat-toolbar {
+    color: black;
+    background-color: white;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+button {
+    margin: 1px;
+}
+
+.avatar {
+    background-color: black;
+    color: white;
+}
+
+.active-menu {
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #3f51b5;
+}
+
+/* Media query for small screens (tablets and mobiles) */
+@media (max-width: 768px) {
+    .hamburger {
+        display: inline-block;
+    }
+
+    /* Hide desktop menu on small screens */
+    mat-toolbar ng-container {
+        display: none;
+    }
+
+    .spacer {
+        flex: 1 1 auto;
+    }
+}
+
+/* Media query for larger screens (laptops and desktops) */
+@media (min-width: 769px) {
+    .hamburger {
+        display: none;
+    }
+
+    /* Show desktop menu on larger screens */
+    mat-toolbar ng-container {
+        display: flex;
+    }
+}

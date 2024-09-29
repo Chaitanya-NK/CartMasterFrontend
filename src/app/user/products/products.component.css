@@ -1,0 +1,177 @@
+/* Container for Products */
+.products-container {
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+    gap: 20px;
+}
+
+.product-image {
+    width: 100%;
+    height: auto;
+}
+
+.average-rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 4px;
+    padding: 2px 5px;
+    font-weight: bold;
+    color: #fff;
+    z-index: 1;
+}
+
+.star {
+    color: #ffcc00;
+    font-size: 20px;
+}
+
+/* Left Sidebar Styling */
+.left-sidebar {
+    flex: 1;
+    width: 25%;
+    padding: 20px;
+}
+
+/* Search Bar and Filter Styling */
+.search-bar,
+.category-filter,
+.sort-options,
+.price-range {
+    width: 100%;
+}
+
+.search-bar {
+    padding-top: 20px;
+}
+
+/* Right Content Styling */
+
+.right-content {
+    width: 75%;
+    padding: 20px;
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Product Grid Styling */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px 0;
+}
+
+/* Product Card Styling */
+.product-card {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 15px;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff;
+}
+
+.product-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.product-image {
+    width: 150px;
+    height: auto;
+    max-height: 200px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+mat-card-content h3 {
+    font-size: 18px;
+    margin: 10px 0 15px;
+    font-weight: bold;
+}
+
+mat-card-content h4 {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.product-card-actions {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+}
+
+mat-icon {
+    vertical-align: middle;
+}
+
+.pagination {
+    margin-top: 10px;
+}
+
+
+/* Responsive Layout for Tablets and Smaller Screens */
+@media (max-width: 1200px) {
+    .products-container {
+        flex-direction: column;
+    }
+
+    .left-sidebar {
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+}
+
+/* Responsive Layout for Mobile Screens */
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    .product-image {
+        height: 150px;
+    }
+
+    .left-sidebar {
+        width: 90%;;
+    }
+}
+
+/* Adjustments for Very Small Screens */
+@media (max-width: 480px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .left-sidebar {
+        flex-direction: row;
+        justify-content: space-between;
+        max-width: 100%;
+        padding: 0;
+    }
+
+    .mat-form-field {
+        width: 48%;
+    }
+
+    button.mat-raised-button {
+        width: 100%;
+    }
+
+    .left-sidebar {
+        width: 90%;;
+    }
+}

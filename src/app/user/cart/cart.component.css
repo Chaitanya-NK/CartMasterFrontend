@@ -1,0 +1,43 @@
+.cart-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.cart-left{
+    width: 60%;
+}
+
+.cart-right {
+    width: 30%;
+}
+
+.mat-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cart-item-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+.proceed-button {
+    margin-top: 20px;
+}
+
+.empty-cart {
+    font-style: italic;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}

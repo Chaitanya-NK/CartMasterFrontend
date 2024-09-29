@@ -1,0 +1,65 @@
+<app-spinner *ngIf="loading"></app-spinner>
+<div *ngIf="!loading" class="profile-container">
+    <!-- Profile Picture Section -->
+    <div class="profile-header">
+        <div class="profile-icon">
+            <mat-icon>account_circle</mat-icon>
+        </div>
+        {{username}}
+    </div>
+
+    <!-- Profile Form -->
+    <form [formGroup]="profileForm">
+        <!-- First Name and Last Name Side by Side -->
+        <div class="form-row">
+            <mat-form-field appearance="fill" class="half-width">
+                <mat-label>First Name</mat-label>
+                <input matInput formControlName="firstName" placeholder="First Name" />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="half-width">
+                <mat-label>Last Name</mat-label>
+                <input matInput formControlName="lastName" placeholder="Last Name" />
+            </mat-form-field>
+        </div>
+
+        <!-- Email and Password Side by Side -->
+        <div class="form-row">
+            <mat-form-field appearance="fill" class="half-width">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" placeholder="Email" type="email" />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="half-width">
+                <mat-label>Password</mat-label>
+                <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
+                    placeholder="Enter your password" />
+                <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+                    <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+
+        <!-- Phone Number Field -->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="phoneNumber" placeholder="Phone Number" />
+        </mat-form-field>
+
+        <!-- Address Field -->
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Address</mat-label>
+            <textarea matInput formControlName="address" placeholder="Address"></textarea>
+        </mat-form-field>
+
+        <!-- Buttons Side by Side -->
+        <div class="button-group">
+            <button mat-raised-button color="primary" (click)="onEdit()">
+                {{ isEditing ? 'Cancel' : 'Edit' }}
+            </button>
+            <button mat-raised-button color="accent" *ngIf="isEditing" (click)="onSave()">
+                Save
+            </button>
+        </div>
+    </form>
+</div>

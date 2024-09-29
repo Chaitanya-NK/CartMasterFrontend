@@ -1,0 +1,75 @@
+<div class="products-container">
+    <!-- Left Sidebar: Filters and Sorting Options -->
+    <div class="left-sidebar">
+        <mat-form-field appearance="outline" class="search-bar">
+            <mat-label>Search Products</mat-label>
+            <input matInput placeholder="Search..." [(ngModel)]="searchTerm" (input)="onSearch($event)" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="category-filter">
+            <mat-label>Category</mat-label>
+            <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onCategoryChange($event.value)">
+                <mat-option *ngFor="let category of categories" [value]="category.categoryID">{{
+                    category.categoryName }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="sort-options">
+            <mat-label>Sort By</mat-label>
+            <mat-select [(ngModel)]="sortType" (selectionChange)="onSortChange($event.value)">
+                <mat-option value="priceAsc">Price: Low to High</mat-option>
+                <mat-option value="priceDesc">Price: High to Low</mat-option>
+                <mat-option value="nameAsc">Name: A to Z</mat-option>
+                <mat-option value="nameDesc">Name: Z to A</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="price-range">
+            <mat-label>Price Range</mat-label>
+            <mat-select [(ngModel)]="selectedPriceRange" (selectionChange)="onPriceRangeChange($event.value)">
+                <mat-option *ngFor="let range of priceRanges" [value]="range">{{ range }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="warn" (click)="clearFilters()"><mat-icon>clear</mat-icon>Clear
+            Filters</button>
+    </div>
+
+    <!-- Right Content: Product Cards and Pagination -->
+    <div class="right-content">
+        <div *ngIf="loading; else productContent" class="product-grid">
+            <div *ngFor="let placeholder of placeholders">
+                <app-card-placeholder></app-card-placeholder>
+            </div>
+        </div>
+
+        <ng-template #productContent>
+            <div class="product-grid">
+                <mat-card *ngFor="let product of paginatedProducts" class="product-card">
+                    <div class="image-container">
+                        <img mat-card-image matTooltip={{product.productName}} matTooltipPosition="above"
+                            class="product-image" [src]="product.imageURL" alt="{{ product.productName }}" />
+                        <div class="average-rating" *ngIf="product.hasReviews" matTooltip='Avg Rating: {{product.averageRating}}' matTooltipPosition="above">
+                            {{ product.averageRating | number: '1.0-1' }} <mat-icon class="star">star</mat-icon>
+                        </div>
+                    </div>
+                    <mat-card-content>
+                        <h3>{{ product.productName }}</h3>
+                        <h4>{{ product.productDescription }}</h4>
+                        <h4>Price: {{product.price | currency: 'INR'}}</h4>
+                    </mat-card-content>
+                    <mat-card-actions class="product-card-actions">
+                        <button mat-button matTooltip="add to favourite" color="accent"
+                            (click)="addToWishlist(product)"><mat-icon>favorite_outline</mat-icon></button>
+                        <button mat-button matTooltip="view product details" color="primary"
+                            (click)="navigateToProductDetail(product.productID)"><mat-icon>open_in_new</mat-icon></button>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        </ng-template>
+
+        <!-- Pagination -->
+        <mat-paginator class="pagination" [pageSize]="pageSize" [length]="totalProducts" [pageSizeOptions]="[6, 9, 12]"
+            showFirstLastButtons aria-label="select page of products" (page)="onPageChange($event)"></mat-paginator>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+<div class="payment-status-container">
+    <ng-container *ngIf="isPaymentSuccessful; else failureMessage">
+        <mat-icon class="success-icon">check_circle</mat-icon>
+        <p>Payment Successful.</p>
+    </ng-container>
+    <ng-template #failureMessage>
+        <mat-icon class="failure-icon" color="warn">cancel</mat-icon>
+        <p>Payment Failed! Please try again.</p>
+    </ng-template>
+</div>

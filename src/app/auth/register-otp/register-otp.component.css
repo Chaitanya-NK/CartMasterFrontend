@@ -1,0 +1,35 @@
+.otp-card {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.otp-title {
+    text-align: center;
+    font-size: large;
+    margin-bottom: 20px;
+}
+
+.otp-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.otp-inputs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.otp-field {
+    width: 50px;
+    margin: 0;
+}
+
+button {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    font-size: 16px;
+}

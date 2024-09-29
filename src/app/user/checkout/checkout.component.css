@@ -1,0 +1,181 @@
+/* General Styles */
+.checkout-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Stepper Styles */
+mat-horizontal-stepper {
+    width: 100%;
+    /* margin-bottom: 30px; */
+}
+
+mat-step {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+mat-step-header {
+    background-color: #f7f7f7;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+mat-step-header .mat-step-label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Cart Items Table */
+.table-container {
+    margin-bottom: 30px;
+}
+
+mat-table {
+    width: 100%;
+    border-spacing: 0;
+}
+
+th.mat-header-cell {
+    background-color: #f1f1f1;
+    font-weight: bold;
+}
+
+td.mat-cell {
+    padding: 12px;
+}
+
+th,
+td {
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.product-image {
+    width: 80px;
+    height: auto;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+/* Address Form Styles */
+.address-form-container {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.address-form-container mat-form-field {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+textarea[matInput] {
+    min-height: 150px;
+    width: 100%;
+    font-size: 16px;
+}
+
+/* Payment Step Styles */
+.payment-steps {
+    display: flex;
+    gap: 20px;
+}
+
+.payment-methods,
+.payment-details {
+    flex: 1;
+}
+
+.payment-methods {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.payment-details {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.payment-details mat-form-field {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.payment-methods mat-radio-button {
+    display: block;
+    margin: 10px 0;
+}
+
+.payment-details .payment-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.payment-details .payment-inputs mat-form-field {
+    flex: 1;
+    min-width: calc(50% - 16px);
+    margin-bottom: 16px;
+}
+
+.card-details {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/* .half-width {
+    width: 48%;
+    gap: 10px;
+} */
+
+.payment-details p {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Summary Styles */
+.summary {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    margin-bottom: 30px;
+}
+
+.summary-item {
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.summary-total {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+}
+
+.buttons {
+    margin-top: 10px;
+}
+
+.address-save {
+    display: flex;
+    flex-direction: column;
+}

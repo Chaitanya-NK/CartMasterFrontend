@@ -1,6 +1,7 @@
 <h1 *ngIf="token; else guestWelcome">Welcome, {{ getUsernameFromToken() }}</h1>
 <ng-template #guestWelcome>
-    <h2>Welcome to Cart Master! Login to proceed further.</h2>
+    <h2>Welcome to Cart Master!</h2>
+    <p>Login to proceed further.</p>
 </ng-template>
 
 <div class="button-container" *ngIf="getUsernameFromToken()!=='ADMIN' && token">

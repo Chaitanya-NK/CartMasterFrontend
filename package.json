@@ -20,6 +20,8 @@
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
+    "@ngx-share/buttons": "^7.1.4",
+    "@ngx-share/core": "^7.1.4",
     "@swimlane/ngx-charts": "^16.0.0",
     "angular-notifier": "^14.0.0",
     "chart.js": "^4.4.4",

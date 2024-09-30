@@ -1,10 +1,9 @@
 export interface Coupon {
     couponId: number,
-    counponCode: string,
+    couponName: string,
+    couponDescription: string,
     discountPercentage: number,
-    discountAmount: number,
-    expiryDate: Date,
-    minimumPurchaseAmount: number,
-    createdAt: Date,
-    isActive: boolean
+    validFrom: Date,
+    validTo: Date,
+    isValid: boolean
 }

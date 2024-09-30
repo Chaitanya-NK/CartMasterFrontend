@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>Share This</h2>
+<div mat-dialog-content class="share-icons">
+    <a href="#" (click)="share('facebook')" class="facebook" title="Share on Facebook">
+        <i class="fab fa-facebook"></i>
+    </a>
+    <a href="#" (click)="share('twitter')" class="twitter" title="Share on Twitter">
+        <i class="fab fa-twitter"></i>
+    </a>
+    <a href="#" (click)="share('linkedin')" class="linkedin" title="Share on LinkedIn">
+        <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="#" (click)="share('whatsapp')" class="whatsapp" title="Share on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    <a href="#" (click)="share('instagram')" class="instagram" title="Share on Instagram">
+        <i class="fab fa-instagram"></i>
+    </a>
+</div>
+<div class="product-link">
+    <h3 (click)="copyToClipboard()" class="link"><strong>Product Link:</strong> {{ currentUrl }}</h3>
+    click link to copy
+</div>
+<div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Close</button>
+</div>

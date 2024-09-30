@@ -5,12 +5,14 @@
             <div class="zoom-lens" #zoomLens></div>
         </div>
     </div>
+
     <div *ngIf="product" class="details-container">
         <h2>{{ product.productName }}</h2>
         <h3>Price: {{ product.price | currency: 'INR' }}</h3>
         <p>Decription: {{ product.productDescription }}</p>
         <p>Stock Quantity: {{ product.stockQuantity }}</p>
         <div class="action-container" *ngIf="product.stockQuantity > 0; else outOfStock">
+            <button mat-icon-button class="share-icon" (click)="shareProduct()"><mat-icon>share</mat-icon></button>
             <button mat-icon-button color="warn" (click)="decreaseCount()"><mat-icon>remove</mat-icon></button>
             <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
             <span *ngIf="!loading" class="count-display">{{quantity}}</span>
@@ -21,7 +23,7 @@
                 (click)="addToCart(product)"><mat-icon>add_shopping_cart</mat-icon></button>
         </div>
         <ng-template #outOfStock class="action-container">
-            <h2 class="outOfStock">Out Of Stock</h2>
+            <h2 class="outOfStock">!Out Of Stock</h2>
         </ng-template>
 
         <div *ngIf="product" class="reviews-section">
@@ -34,8 +36,8 @@
                 <div class="rating-stars">
                     <mat-icon *ngFor="let star of stars; let i = index" [class.filled]="i < newReviewRating"
                         (click)="setRating(i + 1)">star</mat-icon>
-                </div>
-                <button mat-raised-button color="primary" (click)="submitReview()">Submit Review</button>
+                    </div>
+                    <button mat-raised-button color="primary" (click)="submitReview()">Submit Review</button>
             </div>
             <ng-template #editReviewSection>
                 <div *ngIf="userReview" class="edit-review-section">
@@ -65,7 +67,6 @@
             </ng-template>
         </div>
     </div>
-    
     <div class="suggested-products" *ngIf="suggestedProducts.length > 0">
         <h3>Suggested Products</h3>
         <div class="suggested-products-list">

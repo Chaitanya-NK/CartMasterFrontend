@@ -11,7 +11,7 @@
 }
 
 .cart-right {
-    width: 30%;
+    width: 35%;
 }
 
 .mat-table {
@@ -40,4 +40,9 @@
     display: flex;
     justify-content: center;
     margin-top: 30px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
 }

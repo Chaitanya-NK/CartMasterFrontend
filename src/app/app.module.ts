@@ -36,6 +36,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list'
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
 import { NgChartsModule } from 'ng2-charts';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { ToolbarComponentComponent } from './user/toolbar-component/toolbar-component.component';
 import { RegisterComponent } from './auth/register/register.component';
@@ -67,6 +68,10 @@ import { OrderCancelDialogComponent } from './user/order-cancel-dialog/order-can
 import { ReturnConfirmationDialogComponent } from './user/return-confirmation-dialog/return-confirmation-dialog.component';
 import { RequestReturnSpinnerDialogComponent } from './user/request-return-spinner-dialog/request-return-spinner-dialog.component';
 import { DashboardComponent } from './admin/dashboard/dashboard.component';
+import { AdminCouponsComponent } from './admin/admin-coupons/admin-coupons.component';
+import { MatNativeDateModule } from '@angular/material/core';
+import { CouponDialogComponent } from './user/coupon-dialog/coupon-dialog.component';
+import { ProductShareSocialDialogComponent } from './user/product-share-social-dialog/product-share-social-dialog.component';
 
 const customNotifierOptions: NotifierOptions = {
   position: {
@@ -140,7 +145,10 @@ const customNotifierOptions: NotifierOptions = {
     OrderCancelDialogComponent,
     ReturnConfirmationDialogComponent,
     RequestReturnSpinnerDialogComponent,
-    DashboardComponent
+    DashboardComponent,
+    AdminCouponsComponent,
+    CouponDialogComponent,
+    ProductShareSocialDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -176,13 +184,15 @@ const customNotifierOptions: NotifierOptions = {
     MatSidenavModule,
     MatListModule,
     NotifierModule.withConfig(customNotifierOptions),
-    NgChartsModule
+    NgChartsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
-    multi: true
-  }],
+    multi: true,
+  }, MatDatepickerModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,13 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\src",
-    "\\src\\app",
-    "\\src\\app\\user",
-    "\\src\\app\\user\\track-order",
-    "\\src\\app\\user\\view-all-orders",
-    "\\src\\environments"
+    ""
   ],
-  "SelectedNode": "\\src\\app\\user\\track-order\\track-order.component.ts",
+  "SelectedNode": "\\C:\\Users\\2269465\\OneDrive - Cognizant\\Documents\\MiniProjects\\CartMaster\\CartMaster.UI",
   "PreviewInSolutionExplorer": false
 }

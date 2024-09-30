@@ -3,6 +3,12 @@ mat-toolbar {
     background-color: white;
 }
 
+.title {
+    font-family:"Lucida Handwriting";
+    font-weight: bold;
+    letter-spacing: 5px;
+}
+
 .spacer {
     flex: 1 1 auto;
 }

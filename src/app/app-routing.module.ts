@@ -18,6 +18,7 @@ import { ViewAllOrdersComponent } from './user/view-all-orders/view-all-orders.c
 import { TrackOrderComponent } from './user/track-order/track-order.component';
 import { RegisterOtpComponent } from './auth/register-otp/register-otp.component';
 import { DashboardComponent } from './admin/dashboard/dashboard.component';
+import { AdminCouponsComponent } from './admin/admin-coupons/admin-coupons.component';
 
 const routes: Routes = [
     { path: '', component: WelcomeComponent },
@@ -33,6 +34,7 @@ const routes: Routes = [
     { path: 'admin/product', component: AdminProductsComponent },
     { path: 'admin/category', component: AdminCategoryComponent },
     { path: 'admin/users', component: AdminUsersComponent },
+    { path: 'admin/coupons', component: AdminCouponsComponent },
     { path: 'admin/userOrders/:id', component: AdminUserOrdersComponent },
     { path: 'user/products', component: ProductsComponent },
     { path: 'user/product/:id', component: ProductDetailComponent },

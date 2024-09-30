@@ -5,6 +5,8 @@ import { environment } from 'src/environments/environment.development';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CouponDialogComponent } from '../coupon-dialog/coupon-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-cart',
@@ -27,7 +29,8 @@ export class CartComponent implements OnInit {
     constructor(
         private commonService: CommonServiceService,
         private router: Router,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private dialog: MatDialog
     ) { }
 
     ngOnInit(): void {
@@ -71,4 +74,17 @@ export class CartComponent implements OnInit {
     proceedToOrder() {
         this.router.navigate(['/checkout'])
     }
+
+    openCouponDialog(): void {
+        const dialogRef = this.dialog.open(CouponDialogComponent, {
+          width: '500px'
+        });
+    
+        dialogRef.afterClosed().subscribe((result: any) => {
+          if (result) {
+            // Handle the coupon application logic here
+            console.log('Coupon applied:', result);
+          }
+        });
+      }
 }

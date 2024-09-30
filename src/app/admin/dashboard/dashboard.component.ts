@@ -22,7 +22,8 @@ export class DashboardComponent {
         { title: 'Pending Returns', borderColor: '#FFC133', textColor: '#FFC133', countTextColor: '#FFC133', key: 'pendingReturns' },
         { title: 'Out of Stock', borderColor: '#A633FF', textColor: '#A633FF', countTextColor: '#A633FF', key: 'outOfStockProducts' },
         { title: 'Repeat Customers', borderColor: '#008080', textColor: '#008080', countTextColor: '#008080', key: 'repeatCustomersCount' },
-        { title: 'Cancelled Orders', borderColor: '#B22222', textColor: '#B22222', countTextColor: '#B22222', key: 'cancelledOrders' }
+        { title: 'Cancelled Orders', borderColor: '#B22222', textColor: '#B22222', countTextColor: '#B22222', key: 'cancelledOrders' },
+        { title: 'Coupons', borderColor: '#B22222', textColor: '#B22222', countTextColor: '#B22222', key: 'coupons' }
     ];
 
     counts: any = {}

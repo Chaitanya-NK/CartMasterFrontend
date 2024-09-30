@@ -1,0 +1,41 @@
+.share-icons {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.share-icons a {
+    font-size: 2.5em;
+}
+
+.facebook {
+    color: blue;
+}
+
+.twitter {
+    color: black;
+}
+
+.linkedin {
+    color: navy;
+}
+
+.whatsapp {
+    color: green;
+}
+
+.instagram {
+    color: purple;
+}
+
+.mat-dialog-content {
+    text-align: center;
+}
+
+.product-link {
+    text-align: center;
+}
+
+.link {
+    cursor: pointer;
+}

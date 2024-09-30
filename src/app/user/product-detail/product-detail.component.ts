@@ -5,6 +5,8 @@ import { CommonServiceService } from '../../services/common-service.service';
 import { environment } from 'src/environments/environment.development';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserReview } from 'src/app/models/user-review';
+import { MatDialog } from '@angular/material/dialog';
+import { ProductShareSocialDialogComponent } from '../product-share-social-dialog/product-share-social-dialog.component';
 
 @Component({
     selector: 'app-product-detail',
@@ -34,7 +36,8 @@ export class ProductDetailComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private commonService: CommonServiceService,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private dialog: MatDialog
     ) { }
 
     ngOnInit(): void {
@@ -66,6 +69,12 @@ export class ProductDetailComponent implements OnInit {
                 console.error(error);
             }
         )
+    }
+
+    shareProduct() {
+        this.dialog.open(ProductShareSocialDialogComponent, {
+            width: '500px'
+        })
     }
 
     increaseCount(): void {

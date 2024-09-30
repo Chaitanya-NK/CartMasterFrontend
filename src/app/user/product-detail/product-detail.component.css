@@ -76,6 +76,7 @@ p {
     margin-top: 20px;
 }
 
+
 button.mat-icon-button {
     width: 40px;
     height: 40px;
@@ -145,10 +146,6 @@ mat-spinner {
     position: relative;
     /* margin: auto; */
     margin-top: 14px;
-}
-
-.suggested-products {
-    margin: 20px;
 }
 
 .suggested-products-list {

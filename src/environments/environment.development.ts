@@ -41,5 +41,8 @@ export const environment = {
     },
     dashboard: {
         getDashboardData: 'DashboardCounts/GetDashboardData'
+    },
+    coupons: {
+        handleCoupons: 'Coupon/HandleCoupon'
     }
 };

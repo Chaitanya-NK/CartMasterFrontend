@@ -1,6 +1,5 @@
-<div *ngIf="loading">
-    <app-spinner></app-spinner>
-</div>
+<ngx-spinner type="ball-atom" size="medium" [fullScreen]="true"></ngx-spinner>
+
 <div *ngIf="!loading" class="head">
     <h1 class="heading">CartMaster Dashboard</h1>
     <button class="export-button" mat-stroked-button (click)="exportToExcel()">

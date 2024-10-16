@@ -1,4 +1,6 @@
-<div class="coupon-container">
+<ngx-spinner size="medium" type="ball-atom" [fullScreen]="true"></ngx-spinner>
+
+<div *ngIf="!loading" class="coupon-container">
     <div class="coupon-layout">
         <!-- Left Section: Form and Heading -->
         <div class="form-section">
@@ -7,11 +9,17 @@
                 <mat-form-field appearance="fill" class="form-field">
                     <mat-label>Coupon Name</mat-label>
                     <input matInput formControlName="couponName" required>
+                    <mat-error *ngIf="addCouponForm.get('couponName')?.hasError('required')">
+                        Coupon Name is Required
+                    </mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill" class="form-field">
                     <mat-label>Description</mat-label>
                     <textarea matInput formControlName="couponDescription" required></textarea>
+                    <mat-error *ngIf="addCouponForm.get('couponDescription')?.hasError('required')">
+                        Coupon Description is Required
+                    </mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill" class="form-field">
@@ -19,6 +27,9 @@
                     <input matInput [matDatepicker]="validFromPicker" formControlName="validFrom" required>
                     <mat-datepicker-toggle matSuffix [for]="validFromPicker"></mat-datepicker-toggle>
                     <mat-datepicker #validFromPicker></mat-datepicker>
+                    <mat-error *ngIf="addCouponForm.get('validFrom')?.hasError('required')">
+                        Valid From Date is Required
+                    </mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill" class="form-field">
@@ -26,11 +37,17 @@
                     <input matInput [matDatepicker]="validToPicker" formControlName="validTo" required>
                     <mat-datepicker-toggle matSuffix [for]="validToPicker"></mat-datepicker-toggle>
                     <mat-datepicker #validToPicker></mat-datepicker>
+                    <mat-error *ngIf="addCouponForm.get('validTo')?.hasError('required')">
+                        Valid To Date is Required
+                    </mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="fill" class="form-field">
                     <mat-label>Discount Percentage</mat-label>
                     <input matInput type="number" formControlName="discountPercentage" required>
+                    <mat-error *ngIf="addCouponForm.get('discountPercentage')?.hasError('required')">
+                        Discount Percentage is Required
+                    </mat-error>
                 </mat-form-field>
 
                 <button mat-raised-button color="primary" *ngIf="addEditCouponLoading">
@@ -45,36 +62,36 @@
 
         <!-- Right Section: Coupon List -->
         <div class="coupon-list">
-            <h3>Coupons List</h3>
+            <h2>Coupons List</h2>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="coupons" class="mat-elevation-z8 coupon-table">
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 coupon-table" matSort>
                         <!-- Name Column -->
                     <ng-container matColumnDef="couponName">
-                        <th mat-header-cell *matHeaderCellDef>Coupon Name</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Coupon Name</th>
                         <td mat-cell *matCellDef="let coupon">{{ coupon.couponName }}</td>
                     </ng-container>
-    
+
                     <!-- Description Column -->
                     <ng-container matColumnDef="couponDescription">
-                        <th mat-header-cell *matHeaderCellDef>Description</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
                         <td mat-cell *matCellDef="let coupon">{{ coupon.couponDescription }}</td>
                     </ng-container>
     
                     <!-- Valid From Column -->
                     <ng-container matColumnDef="validFrom">
-                        <th mat-header-cell *matHeaderCellDef>Valid From</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Valid From</th>
                         <td mat-cell *matCellDef="let coupon">{{ coupon.validFrom | date }}</td>
                     </ng-container>
     
                     <!-- Valid To Column -->
                     <ng-container matColumnDef="validTo">
-                        <th mat-header-cell *matHeaderCellDef>Valid To</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Valid To</th>
                         <td mat-cell *matCellDef="let coupon">{{ coupon.validTo | date }}</td>
                     </ng-container>
 
                     <!-- Discount Percentage Column -->
                     <ng-container matColumnDef="discountPercentage">
-                        <th mat-header-cell *matHeaderCellDef>Discount (%)</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Discount (%)</th>
                         <td mat-cell *matCellDef="let coupon">{{ coupon.discountPercentage }}</td>
                     </ng-container>
 
@@ -98,6 +115,9 @@
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
+
+                <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                    aria-label="select page of categories"></mat-paginator>
             </div>
         </div>
     </div>

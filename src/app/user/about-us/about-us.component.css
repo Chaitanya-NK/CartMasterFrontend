@@ -1,0 +1,332 @@
+.about-us {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.intro {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.team {
+    margin-top: 1rem;
+}
+
+.developer-info {
+    display: flex;
+    align-items: center;
+    /* Aligns the image and text vertically */
+}
+
+.developer {
+    height: 150px;
+    /* Maintain the same height */
+    width: 150px;
+    /* Maintain the same width */
+    border-radius: 50%;
+    /* Keep the circular shape */
+    margin-right: 1rem;
+    /* Space between image and text */
+}
+
+.developer-details {
+    display: flex;
+    flex-direction: column;
+    /* Align text vertically */
+    justify-content: center;
+    /* Center text vertically */
+}
+
+.developer-details h2 {
+    margin: 0;
+    /* Remove default margin */
+    font-size: 1.5rem;
+    /* Adjust as needed */
+}
+
+.developer-details p {
+    margin: 0;
+    /* Remove default margin */
+    font-size: 1rem;
+    /* Adjust as needed */
+    color: #34495e;
+    /* Maintain color */
+}
+
+
+.banner {
+    flex: 1;
+    padding-right: 2rem;
+
+    .image-banner {
+        width: 500px;
+        height: 400px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.about {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .title {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #2c3e50;
+        font-family: "Lucida Handwriting";
+        letter-spacing: 5px;
+    }
+
+    .description {
+        font-size: 1.2rem;
+        color: #34495e;
+        line-height: 1.6;
+        text-align: justify;
+    }
+}
+
+.our-story {
+    margin: 3rem auto;
+    max-width: 800px;
+    text-align: center;
+    padding: 0 2rem;
+    background: #ffffff url(../../../assets/images/about-us-bg.jpg) center center/cover no-repeat;
+}
+
+.our-story h2 {
+    margin-top: 10rem;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.our-story h2::after {
+    content: '';
+    display: block;
+    width: 60%;
+    height: 4px;
+    background-color: #2c3e50;
+    margin: 0.5rem auto;
+}
+
+.our-story p {
+    font-size: 1.1rem;
+    color: #34495e;
+    line-height: 1.8;
+    text-align: justify;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+.customer-offers {
+    margin: 3rem auto;
+    max-width: 800px;
+    padding: 0 2rem;
+
+    h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        position: relative;
+        font-size: 2.5rem;
+
+        &::after {
+            content: '';
+            display: block;
+            width: 50%;
+            height: 4px;
+            background: #2c3e50;
+            /* Line color */
+            margin: 0.5rem auto;
+            border-radius: 2px;
+        }
+    }
+
+    p {
+        font-size: 1rem;
+        color: #34495e;
+        line-height: 1.6;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        text-align: justify;
+    }
+
+    .offer-item {
+        margin-bottom: 1.5rem;
+        text-align: left;
+
+        strong {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 1rem;
+            color: #34495e;
+        }
+    }
+}
+
+.mission-vision {
+    display: flex;
+    justify-content: space-between;
+    margin: 3rem auto;
+    max-width: 1000px;
+    padding: 0 2rem;
+
+
+    .mission,
+    .vision {
+        flex: 1;
+        margin: 0 1rem;
+        /* Add margin for spacing */
+        text-align: center;
+        /* Center text */
+        background: #ffffff url(../../../assets/images/about-us-bg1.jpg) center center/cover no-repeat;
+
+
+        h2 {
+            font-size: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            /* border-bottom: 2px solid #2c3e50;
+            display: inline-block; */
+            /* Add underline */
+            padding-bottom: 0.5rem;
+
+            /* Space between text and underline */
+            &::after {
+                content: '';
+                display: block;
+                width: 25%;
+                height: 4px;
+                background: #2c3e50;
+                /* Line color */
+                margin: 0.5rem auto;
+                border-radius: 2px;
+            }
+        }
+
+
+        p {
+            font-size: 1rem;
+            color: #34495e;
+            line-height: 1.6;
+            text-align: justify;
+            padding-left: 100px;
+            padding-right: 100px;
+            margin-bottom: 3rem;
+        }
+    }
+}
+
+.looking-ahead-commitment {
+    display: flex;
+    justify-content: space-between;
+    margin: 3rem auto;
+    max-width: 1000px;
+    padding: 0 2rem;
+
+    .looking-ahead,
+    .our-commitment {
+        flex: 1;
+        /* Make both sections flexible */
+        margin: 0 1rem;
+        /* Add margin for spacing */
+        text-align: center;
+        /* Center text */
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            padding-bottom: 0.5rem;
+            /* Space between text and underline */
+
+            &::after {
+                content: '';
+                display: block;
+                width: 35%;
+                height: 4px;
+                background: #2c3e50;
+                /* Line color */
+                margin: 0.5rem auto;
+                border-radius: 2px;
+            }
+        }
+
+        p {
+            font-size: 1rem;
+            color: #34495e;
+            line-height: 1.6;
+            text-align: justify;
+        }
+    }
+}
+
+.why-cart-master {
+    margin: 3rem auto;
+    max-width: 800px;
+    padding: 0 2rem;
+
+    h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        position: relative;
+        font-size: 2.5rem;
+
+        &::after {
+            content: '';
+            display: block;
+            width: 50%;
+            height: 4px;
+            background: #2c3e50;
+            /* Line color */
+            margin: 0.5rem auto;
+            border-radius: 2px;
+        }
+    }
+
+    .reason {
+        margin-bottom: 1.5rem;
+        text-align: left;
+
+        strong {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 1rem;
+            color: #34495e;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .intro {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .banner {
+        padding-right: 0;
+        margin-bottom: 1.5rem;
+    }
+}

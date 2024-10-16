@@ -1,0 +1,12 @@
+<ngx-spinner color="#000" type="timer" [fullScreen]="true"></ngx-spinner>
+
+<div *ngIf="!loading" class="category-container">
+    <div class="category-grid">
+        <div *ngFor="let category of categories" class="category-card">
+            <mat-card (click)="navigateToCategoryProduct(category.categoryID)">
+                <img mat-card-image matTooltip={{category.categoryName}} matTooltipPosition="below"
+                    class="category-image" [src]="category.imageURL" alt="{{ category.categoryName }}" />
+            </mat-card>
+        </div>
+    </div>
+</div>

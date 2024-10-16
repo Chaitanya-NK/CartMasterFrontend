@@ -1,3 +1,5 @@
+<ngx-spinner color="#000" type="timer" [fullScreen]="true"></ngx-spinner>
+
 <div class="cart-container">
     <div class="cart-left">
         <h2>Your Cart</h2>
@@ -70,15 +72,12 @@
             <span>Final Amount:</span>
             <span>{{ finalAmount.toFixed(2) | currency: 'INR' }}</span>
         </div>
+        <span class="coupon-info">You can apply for coupons in the checkout component.</span>
         <div class="buttons">
             <button *ngIf="cartItems.length > 0" mat-raised-button color="primary" class="proceed-button"
                 (click)="proceedToOrder()">
                 <mat-icon>payment</mat-icon>
                 Proceed to Checkout
-            </button>
-            <button *ngIf="cartItems.length > 0" mat-stroked-button color="accent" class="proceed-button" (click)="openCouponDialog()">
-                <mat-icon>card_giftcard</mat-icon>
-                Apply Coupon
             </button>
         </div>
     </div>

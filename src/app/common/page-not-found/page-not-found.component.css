@@ -1,0 +1,32 @@
+.page_404 {
+    padding: 35px 0;
+    background: #fff;
+    font-family: 'Arvo', serif;
+}
+
+.four_zero_four_bg {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
+    height: 400px;
+    background-position: center;
+}
+
+.four_zero_four_bg h1 {
+    font-size: 80px;
+    color: #ff4081;
+    /* Optional Angular Material color */
+}
+
+.link_404 {
+    color: #fff !important;
+    background: #39ac31;
+}
+
+.content_box_404 {
+    margin-top: -60px;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}

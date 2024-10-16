@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { Login } from '../models/login';
-import { AuthResponse } from '../models/auth-response';
 import { Register } from '../models/register';
 import { Menu } from '../models/menu';
 
@@ -39,6 +38,10 @@ export class CommonServiceService {
         return this.http.post<T>(this.baseURL + endpoint, body)
     }
 
+    trackSession<T>(endpoint: string, body: any, headers: any) {
+        return this.http.post(this.baseURL + endpoint, body, headers)
+    }
+
     put<T>(endpoint: string, body: any): Observable<T> {
         return this.http.put<T>(`${this.baseURL}${endpoint}`, body)
     }
@@ -57,6 +60,14 @@ export class CommonServiceService {
 
     register(user: Register): Observable<any> {
         return this.http.post(`${this.baseURL}${environment.register.register}`, user)
+    }
+
+    requestPasswordReset(email: string): Observable<any> {
+        return this.http.post(`${this.baseURL}${environment.resetPassword.requestResetPassword}?email=${email}`, null )
+    }
+
+    resetPassword(token: string, newPassword: string): Observable<any> {
+        return this.http.post(`${this.baseURL}${environment.resetPassword.resetPassword}?token=${token}&newPassword=${newPassword}`, null)
     }
 
     downloadFile<T>(endpoint: string, params: { [key: string]: number }): Observable<Blob> {
@@ -104,6 +115,15 @@ export class CommonServiceService {
             return parseInt(decodedToken.UserID)
         }
         return 0
+    }
+
+    getEmailFromToken(): string {
+        const token = localStorage.getItem('token')
+        if(token) {
+            const decodedToken = JSON.parse(atob(token.split('.')[1]))
+            return decodedToken.Email
+        }
+        return ''
     }
 
     getMenusByRole(roleID: number): Observable<Menu[]> {

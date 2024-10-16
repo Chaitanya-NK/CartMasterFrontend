@@ -1,9 +1,10 @@
+<ngx-spinner color="#000" type="timer" [fullScreen]="true"></ngx-spinner>
+
 <div class="orders-container">
     <h2>Your Orders</h2>
 
     <div *ngIf="loading; else ordersContent">
         <app-card-table-placeholder></app-card-table-placeholder>
-        <app-spinner></app-spinner>
     </div>
     <ng-template #ordersContent>
         <mat-card *ngFor="let order of orders" class="order-card">
@@ -12,6 +13,8 @@
                     <h3>Order #{{ order.orderID }} - {{ order.status }}</h3>
                     <p>Date: {{ order.orderDate | date }}</p>
                     <p>Total Amount: {{ order.totalAmount | currency: 'INR' }}</p>
+                    <p>Discount Amount: {{ order.discountAmount | currency: 'INR' }}</p>
+                    <p>Final Amount: {{ order.finalAmount | currency: 'INR' }}</p>
                     <h4>Items Purchased:</h4>
                     <mat-table [dataSource]="order.orderItems" class="mat-elevation-z8 order-items-table">
     
@@ -80,6 +83,8 @@
                     </mat-table>
                 </div>
                 <div class="order-actions" *ngIf="canDisplayActionButtons(order.orderItems)">
+                    <mat-spinner *ngIf="isDownloading" [diameter]="20"></mat-spinner>
+                    <button mat-raised-button color="accent" *ngIf="order.status === 'Delivered'" (click)="downloadInvoice(order.orderID)"><mat-icon>download</mat-icon> Invoice</button>
                     <button mat-raised-button color="primary" (click)="nagivateToTrackOrder(order.orderID)">Track Order</button>
                     <button mat-raised-button color="warn" *ngIf="canCancelOrder(order.status)" (click)="cancelOrder(order.orderID)">Cancel Order</button>
                 </div>

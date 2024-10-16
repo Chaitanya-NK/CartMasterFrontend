@@ -1,17 +1,11 @@
+<ngx-spinner color="#000" type="timer" [fullScreen]="true"></ngx-spinner>
+
 <div class="products-container">
     <!-- Left Sidebar: Filters and Sorting Options -->
     <div class="left-sidebar">
         <mat-form-field appearance="outline" class="search-bar">
             <mat-label>Search Products</mat-label>
             <input matInput placeholder="Search..." [(ngModel)]="searchTerm" (input)="onSearch($event)" />
-        </mat-form-field>
-
-        <mat-form-field appearance="fill" class="category-filter">
-            <mat-label>Category</mat-label>
-            <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onCategoryChange($event.value)">
-                <mat-option *ngFor="let category of categories" [value]="category.categoryID">{{
-                    category.categoryName }}</mat-option>
-            </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="sort-options">
@@ -59,9 +53,9 @@
                         <h4>Price: {{product.price | currency: 'INR'}}</h4>
                     </mat-card-content>
                     <mat-card-actions class="product-card-actions">
-                        <button mat-button matTooltip="add to favourite" color="accent"
+                        <button mat-icon-button matTooltip="add to favourite" color="accent"
                             (click)="addToWishlist(product)"><mat-icon>favorite_outline</mat-icon></button>
-                        <button mat-button matTooltip="view product details" color="primary"
+                        <button mat-icon-button matTooltip="view product details" color="primary"
                             (click)="navigateToProductDetail(product.productID)"><mat-icon>open_in_new</mat-icon></button>
                     </mat-card-actions>
                 </mat-card>

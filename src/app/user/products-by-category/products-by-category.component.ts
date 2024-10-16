@@ -1,53 +1,67 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../models/product';
-import { Category } from '../../models/category';
 import { PageEvent } from '@angular/material/paginator';
-import { CommonServiceService } from '../../services/common-service.service';
-import { environment } from 'src/environments/environment.development';
-import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { Product } from 'src/app/models/product';
 import { Wishlist } from 'src/app/models/wishlist';
+import { CommonServiceService } from 'src/app/services/common-service.service';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
-    selector: 'app-products',
-    templateUrl: './products.component.html',
-    styleUrls: ['./products.component.css']
+    selector: 'app-products-by-category',
+    templateUrl: './products-by-category.component.html',
+    styleUrls: ['./products-by-category.component.css']
 })
-export class ProductsComponent implements OnInit {
+export class ProductsByCategoryComponent implements OnInit {
 
     products: Product[] = [];
     filteredProducts: Product[] = [];
     paginatedProducts: Product[] = [];
-    categories: Category[] = [];
     priceRanges: string[] = ['0-500', '501-1000', '1001-5000', '5000+'];
-    selectedCategory: string | null = null;
     selectedPriceRange: string | null = null;
     searchTerm: string = '';
     sortType: string = '';
     loading: boolean = true;
     placeholders = Array(3);
+    categoryID: number = 0
 
-    // Pagination variables
     pageSize: number = 6;  // Number of items per page
     currentPage: number = 0;  // Track current page
     totalProducts: number = 0;  // Total number of products
 
+    sessionID: string | null = localStorage.getItem('sessionID')
+
     constructor(
         private commonService: CommonServiceService,
         private router: Router,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private route: ActivatedRoute,
+        private spinnerService: NgxSpinnerService
     ) { }
 
     ngOnInit(): void {
-        this.loadCategories();
-        this.getProducts();
+        this.spinnerService.show()
+        this.route.params.subscribe(params => {
+            this.categoryID = +params['id']
+        })
+
+        setTimeout(() => {
+            this.route.paramMap.subscribe(params => {
+                const categoryID = +params.get('id')!
+                this.getProductsByCategory(categoryID)
+                this.loadAverageRating(categoryID)
+            })
+            this.spinnerService.hide()
+            this.loading = false;
+        }, 2000);
     }
 
     loadAverageRating(productID: number): void {
         this.commonService.getById<number>(environment.reviews.getAverageRating, { productId: productID }).subscribe(
             rating => {
                 const product = this.products.find(p => p.productID === productID)
-                if(product) {
+                if (product) {
                     product.averageRating = rating
                     product.hasReviews = true
                 }
@@ -60,60 +74,43 @@ export class ProductsComponent implements OnInit {
 
     loadAverageRatings(): void {
         this.products.forEach(product => {
-            if(product.hasReviews) {
+            if (product.hasReviews) {
                 this.loadAverageRating(product.productID)
             }
         })
     }
 
-    loadCategories(): void {
-        this.commonService.post<Category[]>(`${environment.categories.handleCategory}?action=getall`,null).subscribe(
-            (response: Category[]) => {
-                this.categories = response;
-            },
-            (error) => {
-                console.error('Error while retrieving categories', error);
+    getProductsByCategory(categoryID: number) {
+        this.commonService.post<any[]>(`${environment.products.handleProduct}?action=getbycategoryid&categoryId=${categoryID}`, null).subscribe(
+            (products: Product[]) => {
+                this.products = products.map(product => ({
+                    ...product,
+                    averageRating: null,
+                    hasReviews: true
+                }));
+                this.filteredProducts = [...this.products];
+                this.totalProducts = this.filteredProducts.length;
+                this.paginateProducts();
+                this.loading = false;
+                this.loadAverageRatings()
+            }),
+            (error: any) => {
+                console.error('Error retrieving products', error);
             }
-        );
     }
 
-    getProducts(): void {
-        setTimeout(() => {
-            this.commonService.post<Product[]>(`${environment.products.handleProduct}?action=getall`, null).subscribe(
-                (response: Product[]) => {
-                    this.products = response.map(product => ({
-                        ...product,
-                        averageRating: null,
-                        hasReviews: true
-                    }));
-                    this.filteredProducts = [...this.products];
-                    this.totalProducts = this.filteredProducts.length;
-                    this.paginateProducts();
-                    this.loading = false;
-                    this.loadAverageRatings()
-                },
-                (error) => {
-                    console.error('Error retrieving products', error);
-                }
-            );
-        }, 1000);
-    }
-
-    // Pagination logic
     paginateProducts(): void {
         const startIndex = this.currentPage * this.pageSize;
         const endIndex = startIndex + this.pageSize;
         this.paginatedProducts = this.filteredProducts.slice(startIndex, endIndex);
     }
 
-    // Update pagination when page changes
     onPageChange(event: PageEvent): void {
         this.pageSize = event.pageSize;
         this.currentPage = event.pageIndex;
         this.paginateProducts();
     }
 
-    // Filtering logic
     onSearch(event: Event): void {
         const inputElement = event.target as HTMLInputElement;
         this.searchTerm = inputElement.value.toLowerCase();
@@ -121,14 +118,6 @@ export class ProductsComponent implements OnInit {
             product.productName.toLowerCase().includes(this.searchTerm) ||
             product.productDescription.toLowerCase().includes(this.searchTerm)
         );
-        this.totalProducts = this.filteredProducts.length;
-        this.paginateProducts();
-    }
-
-    onCategoryChange(categoryID: number): void {
-        this.filteredProducts = this.products.filter((product) => {
-            return product.categoryID === categoryID
-        });
         this.totalProducts = this.filteredProducts.length;
         this.paginateProducts();
     }
@@ -163,7 +152,7 @@ export class ProductsComponent implements OnInit {
     }
 
     navigateToProductDetail(productID: number): void {
-        this.router.navigate(['user/product/', productID]);
+        this.router.navigate([this.sessionID + `/user/products/category/${this.categoryID}/product`, productID]);
     }
 
     addToWishlist(product: Product): void {
@@ -188,7 +177,6 @@ export class ProductsComponent implements OnInit {
 
     clearFilters(): void {
         this.searchTerm = '';
-        this.selectedCategory = null;
         this.sortType = '';
         this.selectedPriceRange = null;
         this.filteredProducts = [...this.products];

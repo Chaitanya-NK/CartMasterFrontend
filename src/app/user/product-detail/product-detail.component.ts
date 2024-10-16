@@ -1,18 +1,20 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Product } from '../../models/product';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonServiceService } from '../../services/common-service.service';
 import { environment } from 'src/environments/environment.development';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserReview } from 'src/app/models/user-review';
 import { MatDialog } from '@angular/material/dialog';
 import { ProductShareSocialDialogComponent } from '../product-share-social-dialog/product-share-social-dialog.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-product-detail',
     templateUrl: './product-detail.component.html',
     styleUrls: ['./product-detail.component.css']
 })
+
 export class ProductDetailComponent implements OnInit {
 
     product: Product | null = null
@@ -23,41 +25,59 @@ export class ProductDetailComponent implements OnInit {
     reviews: UserReview[] = [];
     stars: boolean[] = [false, false, false, false, false];
     loading: boolean = false
+    spinLoading: boolean = true
     hasUserReviewed: boolean = false
     userReview: UserReview | null = null
     userId: number = this.commonService.getUserIdFromToken()
-    userName: number = this.commonService.getUserNameFromToken()
+    userName: string = this.commonService.getUserNameFromToken()
     suggestedProducts: Product[] = []
-    
+    sessionID: any = localStorage.getItem('sessionID')
+    categoryID: number = 0
+
+    addEditProductReviewLoading: boolean = false
+    editingProductReview: boolean = false
 
     @ViewChild('zoomImage', { static: true }) zoomImage!: ElementRef<HTMLImageElement>
     @ViewChild('zoomLens', { static: true }) zoomLens!: ElementRef<HTMLDivElement>
+    hasPurchased!: any;
 
     constructor(
         private route: ActivatedRoute,
         private commonService: CommonServiceService,
         private snackBar: MatSnackBar,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private spinnerService: NgxSpinnerService,
+        private router: Router
     ) { }
 
     ngOnInit(): void {
-        this.route.paramMap.subscribe(params => {
-            const productID = +params.get('id')!
-            this.loadProductDetails(productID)
-            this.loadAverageRating(productID)
-            this.loadReviews(productID);
-            this.commonService.post<Product>(`${environment.products.handleProduct}?action=getbyid&productId=${productID}`, null).subscribe(
-                product => {
-                    this.product = product
-                    if(product) {
-                        this.loadSuggestedProducts(product.categoryID, product.productID)                        
-                    }
-                },
-                error => {
-                    console.error('Error loading suggested products', error);
-                }
-            )
+        this.spinnerService.show()
+        this.route.params.subscribe(params => {
+            this.categoryID = +params['id']
         })
+
+        setTimeout(() => {
+            this.route.paramMap.subscribe(params => {
+                const productID = +params.get('id')!
+                this.loadProductDetails(productID)
+                this.loadAverageRating(productID)
+                this.loadReviews(productID);
+                this.commonService.post<Product>(`${environment.products.handleProduct}?action=getbyid&productId=${productID}`, null).subscribe(
+                    product => {
+                        this.product = product
+                        if (product) {
+                            this.loadSuggestedProducts(product.categoryID, product.productID)
+                        }
+                    },
+                    error => {
+                        console.error('Error loading suggested products', error);
+                    }
+                )
+                this.checkIfUserPurchased()
+            })
+            this.spinnerService.hide()
+            this.spinLoading=false
+        }, 2000);
     }
 
     loadProductDetails(productID: number): void {
@@ -82,7 +102,7 @@ export class ProductDetailComponent implements OnInit {
         setTimeout(() => {
             this.quantity++
             this.loading = false
-        }, 1000)
+        }, 750)
 
     }
 
@@ -92,7 +112,7 @@ export class ProductDetailComponent implements OnInit {
             setTimeout(() => {
                 this.quantity--
                 this.loading = false
-            }, 1000)
+            }, 750)
         }
     }
 
@@ -156,6 +176,18 @@ export class ProductDetailComponent implements OnInit {
         )
     }
 
+    checkIfUserPurchased() {
+        this.route.paramMap.subscribe(params => {
+            const productID = +params.get('id')!
+            this.commonService.post(`${environment.reviews.handleProductReviews}?action=check&productId=${productID}&userId=${this.userId}`, null).subscribe(
+                hasPurchased => {
+                    this.hasPurchased = hasPurchased
+                }
+            )
+        })
+
+    }
+
     loadReviews(productID: number): void {
         this.commonService.post<any[]>(`${environment.reviews.handleProductReviews}?action=getbyid&productId=${productID}`, null).subscribe(
             reviews => {
@@ -175,26 +207,42 @@ export class ProductDetailComponent implements OnInit {
 
     submitReview(): void {
         if (this.product && this.newReviewText && this.newReviewRating > 0) {
-            const body = {
-                productId: this.product.productID,
-                comment: this.newReviewText,
-                rating: this.newReviewRating,
-                userId: this.userId,
-                userName: this.commonService.getUserNameFromToken()
-            };
-            this.commonService.post(`${environment.reviews.handleProductReviews}?action=add`, body).subscribe(
+            this.addEditProductReviewLoading = true
+
+            const action = this.editingProductReview ? 'update' : 'add'
+            const requestBody = this.editingProductReview
+                ? {
+                    reviewId: this.userReview?.reviewID,
+                    comment: this.newReviewText,
+                    rating: this.newReviewRating,
+                }
+                : {
+                    productId: this.product.productID,
+                    comment: this.newReviewText,
+                    rating: this.newReviewRating,
+                    userId: this.userId,
+                    userName: this.commonService.getUserNameFromToken()
+                };
+            this.commonService.post(`${environment.reviews.handleProductReviews}?action=${action}`, requestBody).subscribe(
                 (response: any) => {
                     if (response.success === true) {
-                        this.snackBar.open("Review added", "Close", {
-                            verticalPosition: 'top',
-                            horizontalPosition: 'right'
-                        })
+                        this.snackBar.open(
+                            this.editingProductReview ? "Review edited" : "Review added",
+                            "Close",
+                            {
+                                verticalPosition: 'top',
+                                horizontalPosition: 'right',
+                                duration: 2000
+                            }
+                        )
                     }
                     this.loadReviews(this.product?.productID!); // Reload reviews
                     this.loadAverageRating(this.product?.productID!)
                     this.newReviewRating = 0
                     this.newReviewText = ''
                     this.hasUserReviewed = true
+                    this.addEditProductReviewLoading = false
+                    this.editingProductReview = false
                 },
                 error => {
                     console.error('Error submitting review', error);
@@ -204,11 +252,11 @@ export class ProductDetailComponent implements OnInit {
     }
 
     deleteReview(): void {
-        if(this.userReview) {
+        if (this.userReview) {
             this.commonService.post(`${environment.reviews.handleProductReviews}?action=delete&reviewId=${this.userReview.reviewID}`, null).subscribe(
                 (response: any) => {
-                    if(response.success === true) {
-                        this.snackBar.open("Review Deleted", "Close", {duration: 3000})
+                    if (response.success === true) {
+                        this.snackBar.open("Review Deleted", "Close", { duration: 3000 })
                         this.userReview = null
                         this.hasUserReviewed = false
                         this.loadReviews(this.product?.productID!)
@@ -223,15 +271,17 @@ export class ProductDetailComponent implements OnInit {
     }
 
     startEditingReview(): void {
-        if(this.userReview) {
+        if (this.userReview) {
             this.newReviewRating = this.userReview.rating
             this.newReviewText = this.userReview.comment
+            this.editingProductReview = true
             this.hasUserReviewed = false
+            
         }
-    }    
+    }
 
     editReview(): void {
-        if(this.userReview && this.newReviewText && this.newReviewRating > 0) {
+        if (this.userReview && this.newReviewText && this.newReviewRating > 0) {
             const body = {
                 reviewId: this.userReview.reviewID,
                 comment: this.userReview.comment,
@@ -239,8 +289,8 @@ export class ProductDetailComponent implements OnInit {
             }
             this.commonService.post(`${environment.reviews.handleProductReviews}?action=update`, body).subscribe(
                 (response: any) => {
-                    if(response.success === true) {
-                        this.snackBar.open("Review Edited", "Close", {duration: 3000})
+                    if (response.success === true) {
+                        this.snackBar.open("Review Edited", "Close", { duration: 3000 })
                         this.loadReviews(this.product?.productID!)
                         this.loadAverageRating(this.product?.productID!)
                         this.newReviewText = ''
@@ -275,5 +325,9 @@ export class ProductDetailComponent implements OnInit {
                 console.error('Error while loading suggested products', error);
             }
         )
+    }
+
+    redirectToOtherProduct() {
+        this.router.navigate([`${this.sessionID}/user/products/category/${this.categoryID}/product/${this.product?.productID}`])
     }
 }

@@ -1,6 +1,6 @@
 <div class="auth-card-container">
     <mat-card class="auth-card">
-        <mat-card-title>Login</mat-card-title>
+        <div><mat-card-title>Login</mat-card-title></div>
         <mat-card-content>
             <form [formGroup]="loginForm">
                 <mat-form-field appearance="outline" class="full-width">
@@ -19,12 +19,13 @@
                     <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is
                                 required</mat-error>
                 </mat-form-field>
-
+                <re-captcha (resolved)="onCaptchaResolved($event)" [siteKey]="siteKey"></re-captcha>
+                <button mat-button class="forgot-password" color="warn" (click)="navigateToForgotPassword()">forgot password?</button>
                 <mat-card-actions class="button-container">
                     <button mat-button type="button" (click)="navigateToRegister()">
                         Don't have an account? Register
                     </button>
-                    <button mat-raised-button color="primary" type="submit" (click)="login()">
+                    <button mat-raised-button [disabled]="!captchaResolved || !loginForm.valid" color="primary" type="submit" (click)="login()">
                         Login
                     </button>
                 </mat-card-actions>

@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { OrderCancelDialogComponent } from '../order-cancel-dialog/order-cancel-dialog.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-track-order',
@@ -22,19 +23,27 @@ export class TrackOrderComponent implements OnInit {
     dataSource: MatTableDataSource<UserOrder>
     cancelOrderDisable: string[] = ['Cancelled', 'Delivered', 'Out For Delivery']
     isDownloading: boolean = false
+    loading: boolean = true
 
     constructor(
         private route: ActivatedRoute,
         private commonService: CommonServiceService,
         private snackBar: MatSnackBar,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private spinnerService: NgxSpinnerService
     ) { 
         this.dataSource = new MatTableDataSource<UserOrder>
     }
 
     ngOnInit(): void {
-        const orderID = +this.route.snapshot.paramMap.get('id')!
-        this.loadOrderDetails(orderID)
+        this.spinnerService.show()
+        
+        setTimeout(() => {
+            const orderID = +this.route.snapshot.paramMap.get('id')!
+            this.spinnerService.hide()
+            this.loading = false
+            this.loadOrderDetails(orderID)
+        }, 2000);
     }
 
     loadOrderDetails(orderID: number): void {

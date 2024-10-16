@@ -1,10 +1,9 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonServiceService } from '../../services/common-service.service';
 import { Menu } from '../../models/menu';
 import { environment } from 'src/environments/environment.development';
-import { MatSidenav } from '@angular/material/sidenav';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-toolbar-component',
@@ -17,8 +16,13 @@ export class ToolbarComponentComponent implements OnInit {
     isLoggedIn: boolean = false
     cartItemCount: number = 0
     isSmallScreen: boolean = false; // Flag to detect screen size
+    sessionID: string | null = localStorage.getItem('sessionID')
 
-    constructor(private router: Router, private commonService: CommonServiceService) { }
+    constructor(
+        private router: Router, 
+        private commonService: CommonServiceService,
+        private snackBar: MatSnackBar
+    ) { }
 
     ngOnInit(): void {
         const roleID = this.commonService.getRoleFromToken();
@@ -62,29 +66,40 @@ export class ToolbarComponentComponent implements OnInit {
     }
 
     onMenuClick(route: string) {
-        this.router.navigate([route])
+        this.router.navigate([this.sessionID + route])
     }
 
-    onLogout() {
+    async onLogout() {
         localStorage.clear()
         // window.location.reload()
+        await this.userSession()
         this.router.navigate(['/'])
     }
 
+    async userSession() {
+        this.commonService.post(`${environment.userSession.handleUserSession}?action=update&sessionID=${this.sessionID}`, null).subscribe(
+            (response: any) => {
+                if(response.success = true) {
+                    this.snackBar.open("Session closed", "Close", { duration: 2000 })
+                }
+            }
+        )
+    }
+
     navigateToProfile() {
-        this.router.navigate(['/profile'])
+        this.router.navigate([this.sessionID + '/profile'])
     }
 
     navigateToWishlist() {
-        this.router.navigate(['/wishlist'])
+        this.router.navigate([this.sessionID + '/wishlist'])
     }
 
     navigateToCart() {
-        this.router.navigate(['/cart'])
+        this.router.navigate([this.sessionID + '/cart'])
     }
 
     navigateToOrders() {
-        this.router.navigate(['/user/orders'])
+        this.router.navigate([this.sessionID + '/user/orders'])
     }
 
     getCartItemCount() {

@@ -1,7 +1,11 @@
+.heading {
+    display: flex;
+    justify-content: space-between;
+}
+
 .share-icons {
     display: flex;
     justify-content: space-around;
-    margin: 20px 0;
 }
 
 .share-icons a {
@@ -34,8 +38,25 @@
 
 .product-link {
     text-align: center;
+    margin-bottom: 10px;
 }
 
 .link {
     cursor: pointer;
+}
+
+.facebook,
+.whatsapp,
+.twitter,
+.linkedin,
+.instagram {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.facebook:hover,
+.twitter:hover,
+.whatsapp:hover,
+.linkedin:hover,
+.instagram:hover {
+    transform: scale(1.25);
 }

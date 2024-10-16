@@ -1,4 +1,5 @@
 export interface Category {
     categoryID: number,
-    categoryName: string
+    categoryName: string,
+    imageURL: string
 }

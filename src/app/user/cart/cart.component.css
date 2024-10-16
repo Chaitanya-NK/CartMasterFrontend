@@ -31,6 +31,15 @@
     padding: 5px 0;
 }
 
+.coupon-info {
+    background-color: chartreuse;
+}
+
+.strike-through {
+    text-decoration: line-through;
+    color: red;
+}
+
 .proceed-button {
     margin-top: 20px;
 }

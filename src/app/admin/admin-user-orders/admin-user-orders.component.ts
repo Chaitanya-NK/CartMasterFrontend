@@ -5,6 +5,7 @@ import { UserOrder } from '../../models/user-order';
 import { MatSelectChange } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-admin-user-orders',
@@ -37,17 +38,20 @@ export class AdminUserOrdersComponent implements OnInit {
         private route: ActivatedRoute,
         private commonService: CommonServiceService,
         private snackBar: MatSnackBar,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private spinnerService: NgxSpinnerService
     ) { }
 
     ngOnInit(): void {
+        this.spinnerService.show()
         setTimeout(() => {
             this.route.params.subscribe(params => {
                 this.userId = +params['id']
                 this.fetchUserOrders()
             })
+            this.spinnerService.hide()
             this.loading = false
-        }, 1000);
+        }, 2000);
     }
 
     fetchUserOrders(): void {

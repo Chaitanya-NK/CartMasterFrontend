@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonServiceService } from '../../services/common-service.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from 'src/environments/environment.development';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-profile',
@@ -21,9 +22,11 @@ export class ProfileComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private commonService: CommonServiceService,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private spinnerService: NgxSpinnerService
     ) {
         this.profileForm = this.fb.group({
+            username: [{ value: '', disabled: true }, Validators.required],
             firstName: [{value :'', disabled: true}, Validators.required],
             lastName: [{value :'', disabled: true}, Validators.required],
             email: [{value :'', disabled: true}, [Validators.required, Validators.email]],
@@ -34,12 +37,15 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.spinnerService.show()
+
         this.userID = this.getUserIdFromToken()
         this.username = this.getUserNameFromToken()
         setTimeout(() => {
             this.loading = false
+            this.spinnerService.hide()
             this.loadUserProfile()
-        }, 1000)
+        }, 2000)
     }
 
     getUserIdFromToken(): number {
@@ -84,6 +90,20 @@ export class ProfileComponent implements OnInit {
     }
 
     onSave(): void {
+        const formData = this.profileForm.value
 
+        this.commonService.put(environment.users.update, formData).subscribe(
+            (response: any) => {
+                if(response.success == true) {
+                    this.snackBar.open("User Details updated successfully", "Close", { duration: 2000 })
+                } else {
+                    this.snackBar.open("User Details update failed", "Close", { duration: 2000 })
+                }
+            },
+            error => {
+                this.snackBar.open("User Details update failed", "Close", { duration: 2000 })
+            }
+        )
+        
     }
 }

@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment.development';
 import { Wishlist } from '../../models/wishlist';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NotifierService } from 'angular-notifier';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-product-wishlist',
@@ -23,14 +24,18 @@ export class ProductWishlistComponent implements OnInit {
     constructor(
         private commonService: CommonServiceService,
         private snackBar: MatSnackBar,
-        private notifireService: NotifierService
+        private notifireService: NotifierService,
+        private spinnerService: NgxSpinnerService
     ) {
         this.notifier = notifireService
      }
 
     ngOnInit(): void {
+        this.spinnerService.show()
+
         setTimeout(() => {
             this.loadWishlist()
+            this.spinnerService.hide()
             this.loading = false
         }, 1000)
     }

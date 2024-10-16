@@ -8,6 +8,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from 'src/app/models/user';
 import { MatDialog } from '@angular/material/dialog';
 import { PaymentUnderwayDialogComponent } from '../payment-underway-dialog/payment-underway-dialog.component';
+import { CouponDialogComponent } from '../coupon-dialog/coupon-dialog.component';
+import { Coupon } from 'src/app/models/coupon';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-checkout',
@@ -27,13 +30,21 @@ export class CheckoutComponent implements OnInit {
     user: User | null = null
     addressExists: boolean = false
     editAddressMode: boolean = false
+    discountAmount: number = 0
+    discountedFinalAmount: number = 0
+    couponApplied: boolean = false
+    couponId: number = 0
+    loading: boolean = true
+
+    sessionID: string | null = localStorage.getItem('sessionID')
 
     constructor(
         private commonService: CommonServiceService,
         private fb: FormBuilder,
         private router: Router,
         private snackBar: MatSnackBar,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private spinnerService: NgxSpinnerService
     ) {
         this.addressForm = this.fb.group({
             address: ['', Validators.required]
@@ -49,8 +60,14 @@ export class CheckoutComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.loadCartItems();
-        this.loadAddress()
+        this.spinnerService.show()
+
+        setTimeout(() => {
+            this.loadCartItems();
+            this.loadAddress()
+            this.spinnerService.hide()
+            this.loading = false
+        }, 1500);
     }
 
     loadCartItems() {
@@ -67,7 +84,7 @@ export class CheckoutComponent implements OnInit {
         const userId = this.commonService.getUserIdFromToken()
         this.commonService.getById(environment.users.getAddress, { userId: userId }).subscribe(
             (response: any) => {
-                if(response) {
+                if (response) {
                     this.addressExists = true
                     this.addressForm.patchValue({
                         address: response
@@ -94,13 +111,13 @@ export class CheckoutComponent implements OnInit {
         const addressString = encodeURIComponent(JSON.stringify(formData.address))
         this.commonService.put(environment.users.saveAddress + `?userId=${userId}&address=${addressString}`, {}).subscribe(
             (response: any) => {
-                if(response.success === true) {
-                    this.snackBar.open("Address Saved", "Close", {duration: 3000})
+                if (response.success === true) {
+                    this.snackBar.open("Address Saved", "Close", { duration: 3000 })
                     this.addressExists = true
                     this.editAddressMode = false
                     this.addressForm.get('address')?.disable()
                 } else {
-                    this.snackBar.open("Failed to Save Address", "Close", {duration: 3000})
+                    this.snackBar.open("Failed to Save Address", "Close", { duration: 3000 })
                 }
             }
         )
@@ -111,46 +128,174 @@ export class CheckoutComponent implements OnInit {
         this.addressForm.get('address')?.disable()
     }
 
+    openCouponDialog(): void {
+        const dialogRef = this.dialog.open(CouponDialogComponent, {
+            width: '500px'
+        });
+
+        dialogRef.afterClosed().subscribe((coupon: Coupon) => {
+            if (coupon) {
+                // Handle the coupon application logic here
+                this.couponId = coupon.couponID
+                this.couponApplied = true
+                this.discountAmount = this.finalAmount * (coupon.discountPercentage / 100)
+                this.discountedFinalAmount = this.finalAmount - this.discountAmount
+
+                this.snackBar.open(`Coupon "${coupon.couponName}" applied!`, "Close", { duration: 2000 })
+                this.calculateAmount()
+            }
+        });
+    }
+
+    // placeOrder() {
+    //     const dialogRef = this.dialog.open(PaymentUnderwayDialogComponent, {
+    //         disableClose: true
+    //     })
+
+    //     setTimeout(() => {
+    //         dialogRef.close()
+    //     }, 3000);
+
+    //     const token: any = localStorage.getItem('token')
+    //     const decodedToken = JSON.parse(atob(token.split('.')[1]))
+    //     const userID = decodedToken.UserID
+
+    //     this.commonService.post<any>(`${environment.orders.handleOrder}?action=add&userId=${userID}&totalAmount=${this.discountedFinalAmount}&couponId=${this.couponId}`, null).subscribe(
+    //         response => {
+    //             if (response && response.success === true) {
+    //                 setTimeout(() => {
+    //                     this.snackBar.open("Order placed successfully", "Close", {
+    //                         verticalPosition: 'top',
+    //                         horizontalPosition: 'right'
+    //                     })
+    //                     this.router.navigate([this.sessionID + '/payment-status'], { queryParams: { status: 'true' } })
+    //                 }, 3500);
+    //             } else {
+    //                 this.snackBar.open("Order failed", "Close", {
+    //                     verticalPosition: 'top',
+    //                     horizontalPosition: 'right'
+    //                 })
+    //             }
+    //         },
+    //         error => {
+    //             console.log(error);
+    //             this.snackBar.open("Order failed", "Close", {
+    //                 verticalPosition: 'top',
+    //                 horizontalPosition: 'right'
+    //             })
+    //         }
+    //     )
+    // }
+
     placeOrder() {
+        // Show the payment underway dialog
         const dialogRef = this.dialog.open(PaymentUnderwayDialogComponent, {
             disableClose: true
-        })
-
+        });
+    
         setTimeout(() => {
-            dialogRef.close()
+            dialogRef.close();
         }, 3000);
-
-        const token: any = localStorage.getItem('token')
-        const decodedToken = JSON.parse(atob(token.split('.')[1]))
-        const userID = decodedToken.UserID
-
-        this.commonService.post<any>(`${environment.orders.handleOrder}?action=add&userId=${userID}&totalAmount=${this.finalAmount}`, null).subscribe(
+    
+        const token: any = localStorage.getItem('token');
+        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        const userID = decodedToken.UserID;
+    
+        // Prepare order data
+        const orderData = {
+            userId: userID,
+            totalAmount: this.discountedFinalAmount || this.finalAmount,
+            couponId: this.couponId || null,
+            paymentMethod: this.selectedPaymentMethod
+        };
+    
+        // Call payment method based on the selected option
+        if (this.selectedPaymentMethod === 'card') {
+            this.processCardPayment(orderData);
+        } else if (this.selectedPaymentMethod === 'upi') {
+            this.processUPIPayment(orderData);
+        } else if (this.selectedPaymentMethod === 'cod') {
+            this.createOrder(orderData);  // For COD, proceed directly to order creation
+        }
+    }
+    
+    // Process Card Payment
+    processCardPayment(orderData: any) {
+        const paymentData = {
+            paymentMethod: 'Card',
+            cardName: this.paymentForm.value.cardName,
+            cardNumber: this.paymentForm.value.cardNumber,
+            expiryDate: this.paymentForm.value.expiryDate,
+            cvv: this.paymentForm.value.cvv
+        };
+    
+        // Send payment details to the payment API
+        this.commonService.post<any>(`${environment.payments.handlePayment}?action=add`, paymentData).subscribe(
+            (paymentResponse) => {
+                if (paymentResponse.success) {
+                    // Proceed to order creation after successful payment
+                    this.createOrder(orderData);
+                } else {
+                    this.snackBar.open("Payment failed", "Close", { duration: 3000 });
+                }
+            },
+            (error) => {
+                console.log(error);
+                this.snackBar.open("Payment failed", "Close", { duration: 3000 });
+            }
+        );
+    }
+    
+    // Process UPI Payment
+    processUPIPayment(orderData: any) {
+        const paymentData = {
+            paymentMethod: 'UPI',
+            upiId: this.paymentForm.value.upiId
+        };
+    
+        // Send UPI details to the payment API
+        this.commonService.post<any>(`${environment.payments.handlePayment}?action=add`, paymentData).subscribe(
+            (paymentResponse) => {
+                if (paymentResponse.success) {
+                    // Proceed to order creation after successful payment
+                    this.createOrder(orderData);
+                } else {
+                    this.snackBar.open("UPI Payment failed", "Close", { duration: 3000 });
+                }
+            },
+            (error) => {
+                console.log(error);
+                this.snackBar.open("UPI Payment failed", "Close", { duration: 3000 });
+            }
+        );
+    }
+    
+    // Create Order
+    createOrder(orderData: any) {
+        this.commonService.post<any>(`${environment.orders.handleOrder}?action=add`, orderData).subscribe(
             response => {
                 if (response && response.success === true) {
                     setTimeout(() => {
                         this.snackBar.open("Order placed successfully", "Close", {
                             verticalPosition: 'top',
                             horizontalPosition: 'right'
-                        })
-                        this.router.navigate(['payment-status'], { queryParams: { status: 'true' } })
+                        });
+                        this.router.navigate([this.sessionID + '/payment-status'], { queryParams: { status: 'true' } });
                     }, 3500);
                 } else {
                     this.snackBar.open("Order failed", "Close", {
                         verticalPosition: 'top',
                         horizontalPosition: 'right'
-                    })
+                    });
                 }
-                // this.router.navigate(['/payment-status'], { queryParams: { status: 'true' } })
-
             },
             error => {
                 console.log(error);
-                // this.router.navigate(['/payment-status'], { queryParams: { status: 'false' } })
                 this.snackBar.open("Order failed", "Close", {
                     verticalPosition: 'top',
                     horizontalPosition: 'right'
-                })
+                });
             }
-        )
+        );
     }
 }

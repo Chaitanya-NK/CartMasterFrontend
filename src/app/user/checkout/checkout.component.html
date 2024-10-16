@@ -1,19 +1,6 @@
-<div class="checkout-container">
-    <div class="summary">
-        <div class="summary-item">
-            <span>Subtotal: </span>
-            <span>{{totalAmount | currency: 'INR'}}</span>
-        </div>
-        <div class="summary-item">
-            <span>Tax: </span>
-            <span>{{gstAmount | currency: 'INR'}}</span>
-        </div>
-        <div class="summary-item summary-total">
-            <span>Total: </span>
-            <span>{{finalAmount | currency: 'INR'}}</span>
-        </div>
-    </div>
+<ngx-spinner color="#000" type="timer" [fullScreen]="true"></ngx-spinner>
 
+<div *ngIf="!loading" class="checkout-container">
     <mat-horizontal-stepper linear #stepper>
         <!-- Step 1: Cart Items -->
         <mat-step label="Cart Items">
@@ -81,7 +68,38 @@
             </form>
         </mat-step>
 
-        <!-- Step 3: Payment Options -->
+        <!-- Step 3: Coupons -->
+        <mat-step label="Coupons">
+            <div class="summary">
+                <div class="summary-item">
+                    <span>Subtotal: </span>
+                    <span>{{totalAmount | currency: 'INR'}}</span>
+                </div>
+                <div class="summary-item">
+                    <span>Tax: </span>
+                    <span>{{gstAmount | currency: 'INR'}}</span>
+                </div>
+                <div *ngIf="couponApplied" class="summary-item">
+                    <span>Dicount:</span>
+                    <span>- {{ discountAmount | currency: 'INR' }}</span>
+                </div>
+                <div class="summary-item summary-total">
+                    <span>Total: </span>
+                    <span *ngIf="!couponApplied">{{finalAmount | currency: 'INR'}}</span>
+                    <span *ngIf="couponApplied">{{discountedFinalAmount | currency: 'INR'}}</span>
+                </div>
+            </div>
+            <div class="buttons">
+                <button mat-raised-button (click)="stepper.previous()">Back</button>
+                <button mat-raised-button color="primary" (click)="stepper.next()">Next</button>
+                <button mat-stroked-button color="accent" class="proceed-button" (click)="openCouponDialog()">
+                    <mat-icon>card_giftcard</mat-icon>
+                    Apply Coupon
+                </button>
+            </div>
+        </mat-step>
+
+        <!-- Step 4: Payment Options -->
         <mat-step label="Payment Options">
             <div class="payment-steps">
                 <div class="payment-methods">
@@ -98,23 +116,23 @@
                     <div *ngIf="selectedPaymentMethod === 'card'">
                         <form [formGroup]="paymentForm">
                             <h4>You card details will not be saved with us. It is completely secure!</h4>
-                            <mat-form-field appearance="fill">
+                            <mat-form-field appearance="outline">
                                 <mat-label>Name on Card</mat-label>
                                 <input matInput placeholder="Enter name on the card" formControlName="cardName" />
                             </mat-form-field>
 
-                            <mat-form-field appearance="fill">
+                            <mat-form-field appearance="outline">
                                 <mat-label>Card Number</mat-label>
                                 <input matInput placeholder="xxxx xxxx xxxx xxxx" formControlName="cardNumber" />
                             </mat-form-field>
 
                             <div class="card-details">
-                                <mat-form-field appearance="fill" class="half-width">
+                                <mat-form-field appearance="outline" class="half-width">
                                     <mat-label>Expiry Date</mat-label>
                                     <input matInput placeholder="MM/YYYY" formControlName="expiryDate" />
                                 </mat-form-field>
 
-                                <mat-form-field appearance="fill" class="half-width">
+                                <mat-form-field appearance="outline" class="half-width">
                                     <mat-label>CVV</mat-label>
                                     <input matInput placeholder="123" formControlName="cvv" type="password" />
                                 </mat-form-field>
@@ -125,7 +143,7 @@
                     <div *ngIf="selectedPaymentMethod === 'upi'">
                         <h4>You upi details will not be saved with us. It is completely secure!</h4>
                         <form [formGroup]="paymentForm">
-                            <mat-form-field appearance="fill">
+                            <mat-form-field appearance="outline">
                                 <mat-label>UPI ID</mat-label>
                                 <input matInput formControlName="upiId" />
                             </mat-form-field>

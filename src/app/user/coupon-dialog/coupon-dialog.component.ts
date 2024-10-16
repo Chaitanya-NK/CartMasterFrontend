@@ -33,6 +33,5 @@ export class CouponDialogComponent {
     applyCoupon(coupon: any): void {
         // Implement the logic for applying the coupon here.
         this.dialogRef.close(coupon);
-        this.snackBar.open(`Coupon "${coupon.couponName}" applied successfully!`, 'Close', { duration: 3000 });
     }
 }

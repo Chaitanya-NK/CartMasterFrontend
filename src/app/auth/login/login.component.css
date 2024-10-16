@@ -32,3 +32,8 @@ mat-card-actions {
     display: flex;
     justify-content: space-between;
 }
+
+.forgot-password {
+    display: flex;
+    justify-content: flex-end;
+}

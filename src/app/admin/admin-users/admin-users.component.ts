@@ -6,6 +6,7 @@ import { CommonServiceService } from '../../services/common-service.service';
 import { environment } from 'src/environments/environment.development';
 import { UserOrder } from '../../models/user-order';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-admin-users',
@@ -22,20 +23,26 @@ export class AdminUsersComponent implements OnInit {
     columnCount = 7
     rowCount = 5
 
+    sessionID: string | null = localStorage.getItem('sessionID')
+
     @ViewChild(MatPaginator) paginator!: MatPaginator
 
     constructor(
         private commonService: CommonServiceService,
-        private router: Router
+        private router: Router,
+        private spinnserService: NgxSpinnerService
     ) {
         this.dataSource = new MatTableDataSource<User>()
     }
 
     ngOnInit(): void {
+        this.spinnserService.show()
+
         setTimeout(() => {
+            this.spinnserService.hide()
             this.loading = false
             this.getUsers()
-        }, 1000);
+        }, 1500);
     }
 
     getUsers(): void {
@@ -52,6 +59,6 @@ export class AdminUsersComponent implements OnInit {
     }
 
     viewOrders(userID: number): void {
-        this.router.navigate(['/admin/userOrders', userID])
+        this.router.navigate([this.sessionID + '/admin/userOrders', userID])
     }
 }

@@ -1,5 +1,5 @@
 export interface Coupon {
-    couponId: number,
+    couponID: number,
     couponName: string,
     couponDescription: string,
     discountPercentage: number,

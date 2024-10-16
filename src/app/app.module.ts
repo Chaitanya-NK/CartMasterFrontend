@@ -37,6 +37,10 @@ import { MatListModule } from '@angular/material/list'
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
 import { NgChartsModule } from 'ng2-charts';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { RouterModule } from '@angular/router';
+import { RecaptchaModule } from 'ng-recaptcha';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { MatSortModule } from '@angular/material/sort';
 
 import { ToolbarComponentComponent } from './user/toolbar-component/toolbar-component.component';
 import { RegisterComponent } from './auth/register/register.component';
@@ -49,7 +53,6 @@ import { AuthInterceptor } from 'src/auth.interceptor';
 import { WelcomeComponent } from './common/welcome/welcome.component';
 import { ProfileComponent } from './common/profile/profile.component';
 import { AdminUserOrdersComponent } from './admin/admin-user-orders/admin-user-orders.component';
-import { ProductsComponent } from './user/products/products.component';
 import { ProductDetailComponent } from './user/product-detail/product-detail.component';
 import { ProductWishlistComponent } from './user/product-wishlist/product-wishlist.component';
 import { CartComponent } from './user/cart/cart.component';
@@ -72,127 +75,150 @@ import { AdminCouponsComponent } from './admin/admin-coupons/admin-coupons.compo
 import { MatNativeDateModule } from '@angular/material/core';
 import { CouponDialogComponent } from './user/coupon-dialog/coupon-dialog.component';
 import { ProductShareSocialDialogComponent } from './user/product-share-social-dialog/product-share-social-dialog.component';
+import { BreadcrumbsComponent } from './common/breadcrumbs/breadcrumbs.component';
+import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
+import { AboutUsComponent } from './user/about-us/about-us.component';
+import { ContactUsComponent } from './user/contact-us/contact-us.component';
+import { FooterComponent } from './user/footer/footer.component';
+import { AdminUserSessionTrackerComponent } from './admin/admin-user-session-tracker/admin-user-session-tracker.component';
+import { PageNotFoundComponent } from './common/page-not-found/page-not-found.component';
+import { ProductsByCategoryComponent } from './user/products-by-category/products-by-category.component';
+import { CategoriesComponent } from './user/categories/categories.component';
 
 const customNotifierOptions: NotifierOptions = {
-  position: {
-		horizontal: {
-			position: 'left',
-			distance: 12
-		},
-		vertical: {
-			position: 'bottom',
-			distance: 12,
-			gap: 10
-		}
-	},
-  theme: 'material',
-  behaviour: {
-    autoHide: 5000,
-    onClick: 'hide',
-    onMouseover: 'pauseAutoHide',
-    showDismissButton: true,
-    stacking: 4
-  },
-  animations: {
-    enabled: true,
-    show: {
-      preset: 'slide',
-      speed: 300,
-      easing: 'ease'
+    position: {
+        horizontal: {
+            position: 'left',
+            distance: 12
+        },
+        vertical: {
+            position: 'bottom',
+            distance: 12,
+            gap: 10
+        }
     },
-    hide: {
-      preset: 'fade',
-      speed: 300,
-      easing: 'ease',
-      offset: 50
+    theme: 'material',
+    behaviour: {
+        autoHide: 5000,
+        onClick: 'hide',
+        onMouseover: 'pauseAutoHide',
+        showDismissButton: true,
+        stacking: 4
     },
-    shift: {
-      speed: 300,
-      easing: 'ease'
-    },
-    overlap: 150
-  }
+    animations: {
+        enabled: true,
+        show: {
+            preset: 'slide',
+            speed: 300,
+            easing: 'ease'
+        },
+        hide: {
+            preset: 'fade',
+            speed: 300,
+            easing: 'ease',
+            offset: 50
+        },
+        shift: {
+            speed: 300,
+            easing: 'ease'
+        },
+        overlap: 150
+    }
 };
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ToolbarComponentComponent,
-    RegisterComponent,
-    LoginComponent,
-    AdminProductsComponent,
-    ProductImageDialogComponent,
-    AdminCategoryComponent,
-    AdminUsersComponent,
-    WelcomeComponent,
-    ProfileComponent,
-    AdminUserOrdersComponent,
-    ProductsComponent,
-    ProductDetailComponent,
-    ProductWishlistComponent,
-    CartComponent,
-    CheckoutComponent,
-    PaymentStatusComponent,
-    ViewAllOrdersComponent,
-    TrackOrderComponent,
-    CardPlaceholderComponent,
-    TablePlaceholderComponent,
-    BufferProgressBarComponent,
-    CardTablePlaceholderComponent,
-    SpinnerComponent,
-    RegisterOtpComponent,
-    PaymentUnderwayDialogComponent,
-    OrderCancelDialogComponent,
-    ReturnConfirmationDialogComponent,
-    RequestReturnSpinnerDialogComponent,
-    DashboardComponent,
-    AdminCouponsComponent,
-    CouponDialogComponent,
-    ProductShareSocialDialogComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatInputModule,
-    MatFormFieldModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    MatGridListModule,
-    MatToolbarModule,
-    MatBadgeModule,
-    MatMenuModule,
-    HttpClientModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatDialogModule,
-    MatSelectModule,
-    MatExpansionModule,
-    MatSnackBarModule,
-    MatAutocompleteModule,
-    MatSliderModule,
-    MatTooltipModule,
-    MatStepperModule,
-    MatRadioModule,
-    MatDividerModule,
-    MatProgressBarModule,
-    MatCheckboxModule,
-    MatProgressSpinnerModule,
-    MatSidenavModule,
-    MatListModule,
-    NotifierModule.withConfig(customNotifierOptions),
-    NgChartsModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-  ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS,
-    useClass: AuthInterceptor,
-    multi: true,
-  }, MatDatepickerModule],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        ToolbarComponentComponent,
+        RegisterComponent,
+        LoginComponent,
+        AdminProductsComponent,
+        ProductImageDialogComponent,
+        AdminCategoryComponent,
+        AdminUsersComponent,
+        WelcomeComponent,
+        ProfileComponent,
+        AdminUserOrdersComponent,
+        ProductDetailComponent,
+        ProductWishlistComponent,
+        CartComponent,
+        CheckoutComponent,
+        PaymentStatusComponent,
+        ViewAllOrdersComponent,
+        TrackOrderComponent,
+        CardPlaceholderComponent,
+        TablePlaceholderComponent,
+        BufferProgressBarComponent,
+        CardTablePlaceholderComponent,
+        SpinnerComponent,
+        RegisterOtpComponent,
+        PaymentUnderwayDialogComponent,
+        OrderCancelDialogComponent,
+        ReturnConfirmationDialogComponent,
+        RequestReturnSpinnerDialogComponent,
+        DashboardComponent,
+        AdminCouponsComponent,
+        CouponDialogComponent,
+        ProductShareSocialDialogComponent,
+        BreadcrumbsComponent,
+        ForgotPasswordComponent,
+        ResetPasswordComponent,
+        AboutUsComponent,
+        ContactUsComponent,
+        FooterComponent,
+        AdminUserSessionTrackerComponent,
+        PageNotFoundComponent,
+        ProductsByCategoryComponent,
+        CategoriesComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatInputModule,
+        MatFormFieldModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatIconModule,
+        MatButtonModule,
+        MatGridListModule,
+        MatToolbarModule,
+        MatBadgeModule,
+        MatMenuModule,
+        HttpClientModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatDialogModule,
+        MatSelectModule,
+        MatExpansionModule,
+        MatSnackBarModule,
+        MatAutocompleteModule,
+        MatSliderModule,
+        MatTooltipModule,
+        MatStepperModule,
+        MatRadioModule,
+        MatDividerModule,
+        MatProgressBarModule,
+        MatCheckboxModule,
+        MatProgressSpinnerModule,
+        MatSidenavModule,
+        MatListModule,
+        NotifierModule.withConfig(customNotifierOptions),
+        NgChartsModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        RouterModule,
+        RecaptchaModule,
+        NgxSpinnerModule.forRoot(),
+        MatSortModule
+    ],
+    providers: [{
+        provide: HTTP_INTERCEPTORS,
+        useClass: AuthInterceptor,
+        multi: true,
+    }, MatDatepickerModule],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

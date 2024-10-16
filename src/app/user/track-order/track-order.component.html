@@ -1,8 +1,12 @@
-<div class="track-order-container">
+<ngx-spinner color="#000" type="timer" [fullScreen]="true"></ngx-spinner>
+
+<div *ngIf="!loading" class="track-order-container">
     <div *ngFor="let order of orders" class="order-details">
         <h2>Order #{{ order.orderID }}</h2>
         <p>Status: {{ order.status }}</p>
         <p>Total Amount: {{ order.totalAmount | currency: 'INR' }}</p>
+        <p>Discount Amount: {{ order.discountAmount | currency: 'INR' }}</p>
+        <p>Final Amount: {{ order.finalAmount | currency: 'INR' }}</p>
         <p>Order Date: {{ order.orderDate | date }}</p>
         <p *ngIf="order.status === 'Out For Delivery'" class="arriving-today">
             Arriving Today
@@ -36,8 +40,8 @@
             <button mat-raised-button color="warn" *ngIf="canCancelOrder(order.status)"
                 (click)="cancelOrder(order.orderID)">Cancel Order</button>
             <div class="downlaod-invoice-container">
-                <button mat-raised-button color="primary"
-                    (click)="downloadInvoice(order.orderID)" [disabled]="isDownloading"><mat-icon>download</mat-icon> Donwload Invoice</button>
+                <button mat-raised-button color="primary" (click)="downloadInvoice(order.orderID)"
+                    [disabled]="isDownloading"><mat-icon>download</mat-icon> Donwload Invoice</button>
                 <mat-spinner *ngIf="isDownloading" diameter="24" class="spinner"></mat-spinner>
             </div>
         </div>

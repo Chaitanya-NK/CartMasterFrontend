@@ -9,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Category } from '../../models/category';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-admin-products',
@@ -39,7 +40,8 @@ export class AdminProductsComponent implements OnInit {
         private fb: FormBuilder,
         private dialog: MatDialog,
         private commonService: CommonServiceService,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private spinnerService: NgxSpinnerService
     ) {
         this.addProductForm = this.fb.group({
             productName: ['', Validators.required],
@@ -53,10 +55,13 @@ export class AdminProductsComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.spinnerService.show()
+
         setTimeout(() => {
             this.loadCategories()
-            this.loading = false
-        }, 1000);
+            this.spinnerService.hide()
+            this.loading = false;
+        }, 1500);
     }
 
     loadCategories(): void {
@@ -105,15 +110,23 @@ export class AdminProductsComponent implements OnInit {
 
     onSave() {
         const productData = this.addProductForm.value;
-        productData.imageUrl = this.selectedFileName;
-        productData.categoryId = productData.categoryId.categoryID;
+        const formData = new FormData()
+
+        formData.append('productName', productData.productName)
+        formData.append('productDescription', productData.productDescription)
+        formData.append('price', productData.price)
+        formData.append('stockQuantity', productData.stockQuantity)
+        formData.append('categoryId', productData.categoryId.categoryID)
+        if(this.selectedFileName) {
+            formData.append('imageURL', productData.imageUrl)
+        }
 
         this.addEditProductLoading = true;
 
         const action = this.editingProduct ? 'update' : 'add';
         const requestBody = this.editingProduct
-            ? { ...productData, productId: this.editingProduct.productID }
-            : productData;
+            ? { ...formData, productId: this.editingProduct.productID }
+            : formData;
 
         this.commonService.post(`${environment.products.handleProduct}?action=${action}`, requestBody)
             .subscribe((response: any) => {

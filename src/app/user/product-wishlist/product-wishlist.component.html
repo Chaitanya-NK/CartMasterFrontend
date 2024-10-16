@@ -1,6 +1,6 @@
 <div class="wishlist-container">
     <div *ngIf="loading; else productContent">
-            <app-spinner></app-spinner>
+        <ngx-spinner color="#000" type="timer" [fullScreen]="true"></ngx-spinner>
     </div>
 
     <ng-template #productContent>

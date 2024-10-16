@@ -1,0 +1,40 @@
+<div *ngIf="product" class="reviews-section">
+    <h3>Product Reviews ({{averageRating}} <mat-icon class="average-rating">star</mat-icon> Rating) </h3>
+    <div *ngIf="!hasUserReviewed; else editReviewSection" class="review-form">
+        <mat-form-field appearance="fill">
+            <mat-label>Your Review</mat-label>
+            <textarea matInput [(ngModel)]="newReviewText"></textarea>
+        </mat-form-field>
+        <div class="rating-stars">
+            <mat-icon *ngFor="let star of stars; let i = index" [class.filled]="i < newReviewRating"
+                (click)="setRating(i + 1)">star</mat-icon>
+            </div>
+            <button mat-raised-button color="primary" (click)="submitReview()">Submit Review</button>
+    </div>
+    <ng-template #editReviewSection>
+        <div *ngIf="userReview" class="edit-review-section">
+            <p><strong>{{ userName }} (YOU):</strong> {{ userReview.comment }}</p>
+            <div class="rating-stars">
+                <mat-icon *ngFor="let star of stars; let i = index"
+                    [class.filled]="i < userReview.rating">star</mat-icon>
+            </div>
+            <button mat-icon-button color="primary"
+                (click)="startEditingReview()"><mat-icon>edit</mat-icon></button>
+            <button mat-icon-button color="warn" (click)="deleteReview()"><mat-icon>delete</mat-icon></button>
+        </div>
+    </ng-template>
+    <div *ngIf="reviews.length > 0; else noReviews" class="reviews-list">
+        <div *ngFor="let review of reviews" class="review">
+            <div *ngIf="review.userID !== userId">
+                <p><strong>{{review.username}}:</strong> {{ review.comment }}</p>
+                <div class="rating-stars">
+                    <mat-icon *ngFor="let star of stars; let i = index"
+                        [class.filled]="i < review.rating">star</mat-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #noReviews>
+        <p>Be the first one to review this product!</p>
+    </ng-template>
+</div>

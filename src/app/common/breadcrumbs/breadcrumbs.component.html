@@ -1,0 +1,13 @@
+<nav mat-list aria-label="breadcrumb">
+    <mat-list role="list">
+        <mat-list-item role="listitem" *ngFor="let breadcrumb of breadcrumbs; let last = last">
+            <ng-container *ngIf="!last">
+                <a [routerLink]="breadcrumb.url" class="breadcrumb-link">{{ breadcrumb.label }}</a>
+                <mat-icon>chevron_right</mat-icon>
+            </ng-container>
+            <ng-container *ngIf="last">
+                <span class="breadcrumb-current">{{ breadcrumb.label }}</span>
+            </ng-container>
+        </mat-list-item>
+    </mat-list>
+</nav>

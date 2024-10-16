@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve -o --ssl",
+    "start": "ng serve -o",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -26,7 +26,9 @@
     "angular-notifier": "^14.0.0",
     "chart.js": "^4.4.4",
     "exceljs": "^4.4.0",
+    "ng-recaptcha": "^13.2.1",
     "ng2-charts": "^3.0.0",
+    "ngx-spinner": "^17.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

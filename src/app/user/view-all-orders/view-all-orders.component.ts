@@ -8,6 +8,7 @@ import { OrderCancelDialogComponent } from '../order-cancel-dialog/order-cancel-
 import { MatDialog } from '@angular/material/dialog';
 import { ReturnConfirmationDialogComponent } from '../return-confirmation-dialog/return-confirmation-dialog.component';
 import { RequestReturnSpinnerDialogComponent } from '../request-return-spinner-dialog/request-return-spinner-dialog.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-view-all-orders',
@@ -22,19 +23,25 @@ export class ViewAllOrdersComponent implements OnInit {
     loading: boolean = true
     cancelOrderDisable: string[] = ['Cancelled', 'Delivered', 'Out For Delivery']
     returnOrderStatus: string[] = ['None', 'Return Requested', 'Returned']
+    sessionID: string | null = localStorage.getItem('sessionID')
+    isDownloading: boolean = false
 
     constructor(
         private commonService: CommonServiceService,
         private router: Router,
         private snackBar: MatSnackBar,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private spinnerService: NgxSpinnerService
     ) { }
 
     ngOnInit(): void {
+        this.spinnerService.show()
+
         setTimeout(() => {
             this.loadOrders()
+            this.spinnerService.hide()
             this.loading = false
-        }, 1000)
+        }, 1500)
     }
 
     loadOrders() {
@@ -43,8 +50,8 @@ export class ViewAllOrdersComponent implements OnInit {
             orders => {
                 this.orders = orders
                 this.orders.forEach(order => {
-                    if(order.status === 'Delivered') {
-                        if(!this.displayedColumns.includes('return')) {
+                    if (order.status === 'Delivered') {
+                        if (!this.displayedColumns.includes('return')) {
                             this.displayedColumns.push('return')
                         }
                     }
@@ -57,7 +64,7 @@ export class ViewAllOrdersComponent implements OnInit {
         return !this.cancelOrderDisable.includes(status)
     }
 
-    isReturnRequested(orderItems: OrderItem[]) : boolean {
+    isReturnRequested(orderItems: OrderItem[]): boolean {
         return orderItems.some(item => item.returnRequested === true)
     }
 
@@ -76,28 +83,46 @@ export class ViewAllOrdersComponent implements OnInit {
 
         this.commonService.post(`${environment.orders.handleOrder}?action=cancelorder&orderId=${orderId}`, null).subscribe(
             (response: any) => {
-                if(response.success === true) {
+                if (response.success === true) {
                     setTimeout(() => {
-                        this.snackBar.open("Order cancelled successfully", "Close", {duration: 3000})
+                        this.snackBar.open("Order cancelled successfully", "Close", { duration: 3000 })
                         this.loadOrders()
                     }, 3500);
                 } else {
-                    this.snackBar.open("Failed to cancel order", "Close", {duration: 3000})
+                    this.snackBar.open("Failed to cancel order", "Close", { duration: 3000 })
                     this.loadOrders()
                 }
             }
         )
     }
 
+    downloadInvoice(orderId: number): void {
+        this.isDownloading = true
+        this.commonService.downloadFile(environment.orders.getInvoiceByOrderId, { orderId: orderId }).subscribe((response: Blob) => {
+            const blob = new Blob([response], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Invoice_Order_${orderId}.pdf`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            this.snackBar.open("Invoice Downloaded", "Close", { duration: 3000 });
+            this.isDownloading = false
+        }, (error) => {
+            this.snackBar.open("Failed to download invoice", "Close", { duration: 3000 });
+            this.isDownloading = false
+        });
+    }
+
     nagivateToTrackOrder(orderID: number) {
-        this.router.navigate(['/user/order/track-order', orderID])
+        this.router.navigate([this.sessionID + '/user/order/track-order', orderID])
     }
 
     requestReturn(item: OrderItem) {
         const dialogRef = this.dialog.open(ReturnConfirmationDialogComponent)
 
         dialogRef.afterClosed().subscribe(result => {
-            if(result) {
+            if (result) {
                 const spinnerDialogRef = this.dialog.open(RequestReturnSpinnerDialogComponent, {
                     disableClose: true,
                     width: '300px'
@@ -106,7 +131,7 @@ export class ViewAllOrdersComponent implements OnInit {
                     this.commonService.post(`${environment.orders.handleOrder}?action=requestreturn&orderItemId=${item.orderItemID}`, null).subscribe(
                         (response: any) => {
                             spinnerDialogRef.close()
-                            if(response.success) {
+                            if (response.success) {
                                 this.snackBar.open("Return requested successfully", "Close", {
                                     duration: 3000
                                 })

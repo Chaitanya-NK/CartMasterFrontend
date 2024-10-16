@@ -7,6 +7,16 @@ export const environment = {
     login: {
         login: 'User/Login'
     },
+    userSession: {
+        handleUserSession: 'UserSession/HandleUserSession'
+    },
+    resetPassword: {
+        requestResetPassword: 'User/request-password-reset',
+        resetPassword: 'User/reset-password'
+    },
+    email: {
+        sendEmail: 'Email/SendEmail'
+    },
     wishlsit: {
         handleWishlist: 'Wishlist/HandleWishlist'
     },
@@ -27,6 +37,9 @@ export const environment = {
     cart: {
         getCartItemCountByCartId: 'Cart/GetCartItemCountByCartId/:cartId',
         handleCart: 'Cart/HandleCart'
+    },
+    payments: {
+        handlePayment: 'Payment/HandlePayment'
     },
     orders: {
         getInvoiceByOrderId: 'Order/GetOrderInvoice/:orderId',

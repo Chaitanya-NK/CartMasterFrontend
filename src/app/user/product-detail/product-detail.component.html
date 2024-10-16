@@ -1,3 +1,5 @@
+<ngx-spinner color="#000" type="timer" [fullScreen]="true"></ngx-spinner>
+
 <div class="product-detail-container">
     <div class="image-container">
         <div class="zoom-wrapper" (mousemove)="zoom($event)" (mouseleave)="resetZoom()">
@@ -29,15 +31,23 @@
         <div *ngIf="product" class="reviews-section">
             <h3>Product Reviews ({{averageRating}} <mat-icon class="average-rating">star</mat-icon> Rating) </h3>
             <div *ngIf="!hasUserReviewed; else editReviewSection" class="review-form">
-                <mat-form-field appearance="fill">
-                    <mat-label>Your Review</mat-label>
-                    <textarea matInput [(ngModel)]="newReviewText"></textarea>
-                </mat-form-field>
-                <div class="rating-stars">
-                    <mat-icon *ngFor="let star of stars; let i = index" [class.filled]="i < newReviewRating"
-                        (click)="setRating(i + 1)">star</mat-icon>
-                    </div>
-                    <button mat-raised-button color="primary" (click)="submitReview()">Submit Review</button>
+                <div *ngIf="hasPurchased; else notPurchased">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Your Review</mat-label>
+                        <textarea matInput [(ngModel)]="newReviewText"></textarea>
+                    </mat-form-field>
+                    <div class="rating-stars">
+                        <mat-icon *ngFor="let star of stars; let i = index" [class.filled]="i < newReviewRating"
+                            (click)="setRating(i + 1)">star</mat-icon>
+                        </div>
+                        <button mat-raised-button color="primary" (click)="submitReview()">
+                            <mat-icon>{{ editingProductReview ? 'edit' : 'add' }}</mat-icon>
+                            {{ editingProductReview ? 'Edit Review' : 'Submit Review' }}
+                        </button>
+                </div>
+                <ng-template #notPurchased>
+                    <p>Please purchase the product to leave a review.</p>
+                </ng-template>
             </div>
             <ng-template #editReviewSection>
                 <div *ngIf="userReview" class="edit-review-section">
@@ -67,6 +77,7 @@
             </ng-template>
         </div>
     </div>
+    <!-- <app-user-reviews></app-user-reviews> -->
     <div class="suggested-products" *ngIf="suggestedProducts.length > 0">
         <h3>Suggested Products</h3>
         <div class="suggested-products-list">

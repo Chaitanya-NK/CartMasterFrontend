@@ -6,6 +6,10 @@ import { Category } from '../../models/category';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ProductImageDialogComponent } from '../product-image-dialog/product-image-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
     selector: 'app-admin-category',
@@ -16,7 +20,9 @@ export class AdminCategoryComponent implements OnInit {
     
     addCategoryForm: FormGroup;
     categories: Category[] = [];
-    displayedColumns: string[] = ["categoryName", "edit"];
+    selectedFileName: string | null = null
+    previewUrl: string | ArrayBuffer | null = null
+    displayedColumns: string[] = ["image", "categoryName", "edit"];
     dataSource: MatTableDataSource<Category>;
     loading: boolean = true;
     rowCount = 2;
@@ -26,31 +32,45 @@ export class AdminCategoryComponent implements OnInit {
     editingCategory: Category | null = null; // Holds the category being edited
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
+    @ViewChild(MatSort) sort!: MatSort;
 
     constructor(
         private fb: FormBuilder,
         private snackBar: MatSnackBar,
-        private commonService: CommonServiceService
+        private commonService: CommonServiceService,
+        private spinnerService: NgxSpinnerService,
+        private dialog: MatDialog
     ) {
         this.addCategoryForm = this.fb.group({
-            categoryName: ['', Validators.required]
+            categoryName: ['', Validators.required],
+            imageUrl: [null, Validators.required]
         });
         this.dataSource = new MatTableDataSource<Category>(this.categories);
     }
 
+    // ngAfterViewInit() {
+    //     this.dataSource.sort = this.sort
+    // }
+
     ngOnInit(): void {
+        this.spinnerService.show()
+
         setTimeout(() => {
             this.getCategories();
+            this.spinnerService.hide()
             this.loading = false;
-        }, 1000);
+        }, 2000);
     }
 
     getCategories(): void {
+        this.spinnerService.show()
         this.commonService.post<Category[]>(`${environment.categories.handleCategory}?action=getall`,null).subscribe(
             (response: Category[]) => {
                 this.categories = response;
                 this.dataSource = new MatTableDataSource<Category>(this.categories);
                 this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort
+                this.spinnerService.hide()
             },
             (error) => {
                 console.error('Error while retrieving categories', error);
@@ -58,15 +78,45 @@ export class AdminCategoryComponent implements OnInit {
         );
     }
 
-    // Triggered when the form is submitted (add/edit)
-    onSubmit(): void {
-        const categoryData = this.addCategoryForm.value;
-        this.addEditCategoryLoading = true
+    onFileChange(event: any) {
+        const file = event.target.files[0]
+        if (file) {
+            this.selectedFileName = file.name
+            this.addCategoryForm.patchValue({ imageUrl: file })
 
+            const reader = new FileReader()
+            reader.onload = () => {
+                this.previewUrl = reader.result
+            }
+            reader.readAsDataURL(file)
+        }
+    }
+
+    openImageDialog() {
+        if (this.previewUrl) {
+            this.dialog.open(ProductImageDialogComponent, {
+                data: { imageUrl: this.previewUrl },
+                width: '80%'
+            })
+        }
+    }
+
+    // Triggered when the form is submitted (add/edit)
+    onSubmit() {
+        const categoryData = this.addCategoryForm.value;
+        const formData = new FormData()
+        
+        formData.append('categoryName', categoryData.categoryName)
+        if(this.selectedFileName) {
+            formData.append('imageURL', categoryData.imageUrl)
+        }
+
+        this.addEditCategoryLoading = true
+        
         const action = this.editingCategory ? 'update' : 'add'
         const requestBody = this.editingCategory
-            ? { ...categoryData, categoryId: this.editingCategory.categoryID }
-            : categoryData
+            ? { ...formData, categoryId: this.editingCategory.categoryID }
+            : formData
         
         this.commonService.post(`${environment.categories.handleCategory}?action=${action}`, requestBody)
             .subscribe((response: any) => {
@@ -93,7 +143,8 @@ export class AdminCategoryComponent implements OnInit {
     editCategory(category: Category): void {
         this.editingCategory = category; // Set the category being edited
         this.addCategoryForm.patchValue({
-            categoryName: category.categoryName
+            categoryName: category.categoryName,
+            imageURL: category.imageURL
         });
     }
 

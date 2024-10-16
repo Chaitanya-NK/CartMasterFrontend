@@ -1,6 +1,5 @@
-<div *ngIf="loading">
-    <app-spinner></app-spinner>
-</div>
+<ngx-spinner type="ball-atom" size="medium" [fullScreen]="true"></ngx-spinner>
+
 <div class="no-orders" *ngIf="userOrders.length === 0 && !loading">
     <h1>No orders for this user!</h1>
 </div>
@@ -19,6 +18,8 @@
             <div class="order-details">
                 <p>Date: {{ order.orderDate | date }}</p>
                 <p>Total Amount: {{ order.totalAmount | currency: 'INR' }}</p>
+                <p>Discount Amount: {{ order.discountAmount | currency: 'INR' }}</p>
+                <p>Final Amount: {{ order.finalAmount | currency: 'INR' }}</p>
 
                 <!-- Mat Table for order items -->
                 <mat-table [dataSource]="order.orderItems" class="order-items-table mat-elevation-z8">
@@ -55,14 +56,16 @@
                     <!-- Return Column -->
                     <ng-container matColumnDef="return">
                         <mat-header-cell *matHeaderCellDef> Return </mat-header-cell>
-                        <mat-cell *matCellDef="let item"> 
+                        <mat-cell *matCellDef="let item">
                             <ng-container [ngSwitch]="item.returnStatus">
                                 <ng-container *ngSwitchCase="'Return Requested'">
-                                    <button mat-button color="primary" (click)="processReturnRequest(item, 'Return Accepted')">Accept Return</button>
+                                    <button mat-button color="primary"
+                                        (click)="processReturnRequest(item, 'Return Accepted')">Accept Return</button>
                                     <span class="return-status">Return Requested</span>
                                 </ng-container>
                                 <ng-container *ngSwitchCase="'Return Accepted'">
-                                    <button mat-button color="primary" (click)="processReturnRequest(item, 'Returned')">Mark As Returned</button>
+                                    <button mat-button color="primary"
+                                        (click)="processReturnRequest(item, 'Returned')">Mark As Returned</button>
                                     <span class="return-status">Return Accepted</span>
                                 </ng-container>
                                 <ng-container *ngSwitchCase="'Returned'">
@@ -75,13 +78,16 @@
                         </mat-cell>
                     </ng-container>
 
-                    <mat-header-row *matHeaderRowDef="['productName', 'productDescription', 'imageURL', 'quantity', 'price', 'return']"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: ['productName', 'productDescription', 'imageURL', 'quantity', 'price', 'return'];"></mat-row>
+                    <mat-header-row
+                        *matHeaderRowDef="['productName', 'productDescription', 'imageURL', 'quantity', 'price', 'return']"></mat-header-row>
+                    <mat-row
+                        *matRowDef="let row; columns: ['productName', 'productDescription', 'imageURL', 'quantity', 'price', 'return'];"></mat-row>
                 </mat-table>
 
                 <mat-form-field *ngIf="order.status !== 'Delivered' && order.status !== 'Cancelled'" appearance="fill">
                     <mat-label>Change Order Status</mat-label>
-                    <mat-select [value]="order.status" (selectionChange)="changeOrderStatus(order.orderID, $event.value)">
+                    <mat-select [value]="order.status"
+                        (selectionChange)="changeOrderStatus(order.orderID, $event.value)">
                         <mat-option *ngFor="let status of statuses" [value]="status">
                             {{ status }}
                         </mat-option>

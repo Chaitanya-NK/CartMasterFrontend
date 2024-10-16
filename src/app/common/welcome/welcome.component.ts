@@ -10,6 +10,7 @@ import { CommonServiceService } from '../../services/common-service.service';
 export class WelcomeComponent {
 
     token: string | null = localStorage.getItem('token')
+    sessionID: string | null = localStorage.getItem('sessionID')
 
     constructor(
         private router: Router,
@@ -22,6 +23,6 @@ export class WelcomeComponent {
     }
 
     navigateToShop() {
-        this.router.navigate(['/user/products'])
+        this.router.navigate([this.sessionID + '/user/categories'])
     }
 }

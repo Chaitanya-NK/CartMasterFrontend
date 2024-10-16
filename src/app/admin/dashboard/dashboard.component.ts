@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment.development';
 import * as ExcelJS from 'exceljs'
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-dashboard',
@@ -15,6 +16,7 @@ export class DashboardComponent {
 
     dashboardCards = [
         { title: 'Products', borderColor: '#FF5733', textColor: '#FF5733', countTextColor: '#FF5733', key: 'totalProducts' },
+        { title: 'Categories', borderColor: '#000000', textColor: '#000000', countTextColor: '#000000', key: 'totalCategories' },
         { title: 'Users', borderColor: '#33FF57', textColor: '#33FF57', countTextColor: '#33FF57', key: 'totalUsers' },
         { title: 'Orders', borderColor: '#3357FF', textColor: '#3357FF', countTextColor: '#3357FF', key: 'totalOrders' },
         { title: 'Revenue', borderColor: '#FF33A6', textColor: '#FF33A6', countTextColor: '#FF33A6', key: 'revenue' },
@@ -23,7 +25,8 @@ export class DashboardComponent {
         { title: 'Out of Stock', borderColor: '#A633FF', textColor: '#A633FF', countTextColor: '#A633FF', key: 'outOfStockProducts' },
         { title: 'Repeat Customers', borderColor: '#008080', textColor: '#008080', countTextColor: '#008080', key: 'repeatCustomersCount' },
         { title: 'Cancelled Orders', borderColor: '#B22222', textColor: '#B22222', countTextColor: '#B22222', key: 'cancelledOrders' },
-        { title: 'Coupons', borderColor: '#B22222', textColor: '#B22222', countTextColor: '#B22222', key: 'coupons' }
+        { title: 'Coupons', borderColor: '#B22222', textColor: '#B22222', countTextColor: '#B22222', key: 'coupons' },
+        { title: 'Current Logins', borderColor: '#FFC133', textColor: '#FFC133', countTextColor: '#FFC133', key: 'currentLogins' }
     ];
 
     counts: any = {}
@@ -52,15 +55,19 @@ export class DashboardComponent {
     bestCategoriesChartLabels: string[] = []
 
     constructor(
-        private commonService: CommonServiceService
+        private commonService: CommonServiceService,
+        private spinnerService: NgxSpinnerService
     ) {
         Chart.register(...registerables); // Required for Chart.js
         this.dataSource = new MatTableDataSource<any>(this.inactiveUsers);
     }
 
     ngOnInit(): void {
+        this.spinnerService.show()
+
         setTimeout(() => {
             this.loadDashboard()
+            this.spinnerService.hide()
             this.loading = false
         }, 2000);
     }

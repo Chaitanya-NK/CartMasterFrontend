@@ -4,6 +4,8 @@ export interface UserOrder {
     orderDate: string,
     status: string,
     totalAmount: number,
+    discountAmount: number,
+    finalAmount: number,
     orderItems: OrderItem[]
 }
 
